@@ -8,11 +8,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 
-class Appointment extends Model
+class Appointment extends Model implements Sortable
 {
     use HasFactory;
+    use SortableTrait;
 
+    public $sortable = [
+        'order_column_name' => 'order_column',
+        'sort_when_creating' => true,
+    ];
+    
     protected $casts = [
         'status' => AppointmentStatus::class,
         'date' => 'datetime',

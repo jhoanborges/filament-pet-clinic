@@ -16,6 +16,8 @@
         "laravel/sanctum": "^4.0",
         "laravel/telescope": "^5.0",
         "laravel/tinker": "^2.8",
+        "mokhosh/filament-kanban": "^2.9",
+        "spatie/eloquent-sortable": "^4.4",
         "ysfkaya/filament-phone-input": "^3.1"
     },
     "require-dev": {
@@ -24,7 +26,7 @@
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.6",
-        "nunomaduro/larastan": "^2.0",
+        "larastan/larastan": "^2.0",
         "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-laravel": "^3.1",
         "phpunit/phpunit": "^11.5",
