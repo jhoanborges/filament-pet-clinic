@@ -127,9 +127,9 @@ class AppointmentResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('Confirm')
+                Tables\Actions\Action::make('Atendida')
                     ->action(function (Appointment $record) {
-                        $record->status = AppointmentStatus::Confirmed;
+                        $record->status = AppointmentStatus::Attended;
                         $record->save();
                     })
                     ->visible(fn (Appointment $record) => $record->status == AppointmentStatus::Created)
