@@ -16,7 +16,7 @@ enum AppointmentStatus: string implements HasLabel, HasColor
 
     public function getLabel(): ?string
     {
-        return $this->status;
+        return $this->name;
     }
     
 
