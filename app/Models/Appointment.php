@@ -13,21 +13,11 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    protected static $unguarded = false;
-
-    public $fillable = [
-        'pet_id',
-        'slot_id',
-        'clinic_id',
-        'doctor_id',
-        'date',
-        'description',
-        'status'
-    ];
-
     protected $casts = [
         'status' => AppointmentStatus::class,
-        'date' => 'datetime'
+        'date' => 'datetime',
+        'start_time' => 'datetime',
+        'end_time' => 'datetime'
     ];
 
     public function pet(): BelongsTo
@@ -47,7 +37,10 @@ class Appointment extends Model
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'doctor_id');
+        return $this->belongsTo(User::class, 'doctor_id')
+            ->whereHas('role', function ($query) {
+                $query->where('name', 'doctor');
+            });
     }
 
     public function scopeNew(Builder $query): void

@@ -20,14 +20,14 @@ class Pet extends Model
         'date_of_birth' => 'datetime'
     ];
 
-    public function scopeOwner(Builder $query, User $owner): void
+    public function scopeClient(Builder $query, Client $client): void
     {
-        $query->where('owner_id', $owner->id);
+        $query->where('client_id', $client->id);
     }
 
-    public function owner(): BelongsTo
+    public function client(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(Client::class, 'client_id');
     }
 
     public function appointments(): HasMany

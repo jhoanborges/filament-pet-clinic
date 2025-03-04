@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class ClinicResource extends Resource
 {
@@ -29,9 +30,8 @@ class ClinicResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('zip')
                     ->required(),
-                Forms\Components\TextInput::make('phone')
-                    ->tel()
-                    ->required(),
+                    PhoneInput::make('phone'),
+
             ]);
     }
 

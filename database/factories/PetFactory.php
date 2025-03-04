@@ -20,7 +20,7 @@ class PetFactory extends Factory
         return [
             'name' => fake()->name(),
             'date_of_birth' => fake()->date(),
-            'type' => PetType::Dog,
+            'type' => 'dog',
             'avatar' => 'avatar.png'
         ];
     }
