@@ -2,24 +2,27 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\AppointmentStatus;
-use App\Filament\Resources\AppointmentResource\Pages;
-use App\Models\Appointment;
 use App\Models\Pet;
+use Filament\Forms;
 use App\Models\Role;
 use App\Models\Slot;
 use App\Models\User;
-use App\Support\AvatarOptions;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Tables;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Appointment;
+use App\Support\AvatarOptions;
 use Illuminate\Support\Carbon;
+use App\Enums\AppointmentStatus;
+use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TimePicker;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\AppointmentResource\Pages;
+use Asmit\FilamentMention\Forms\Components\RichMentionEditor;
 
 class AppointmentResource extends Resource
 {
@@ -31,7 +34,7 @@ class AppointmentResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $doctorRole = Role::whereName('doctor')->first();
+        //$doctorRole = Role::whereName('doctor')->first();
 
         return $form
             ->schema([
@@ -72,24 +75,12 @@ class AppointmentResource extends Resource
                         ->required()
                         ->live()
                         ->afterStateUpdated(fn (Set $set) => $set('doctor_id', null)),
-                    Forms\Components\Select::make('doctor_id')
-                        ->label('Doctor')
-                        ->allowHtml()
-                        ->options(function (Get $get) use ($doctorRole) {
-                            $doctors = User::whereBelongsTo($doctorRole)
-                                ->whereHas('schedules', function (Builder $query) use ($get) {
-                                    $dayOfTheWeek = Carbon::parse($get('date'))->dayOfWeek;
-                                    $query
-                                        ->where('day_of_week', $dayOfTheWeek)
-                                        ->where('clinic_id', $get('clinic_id'));
-
-                                })
-                                ->get();
-                            return $doctors->mapWithKeys(function ($doctor) {
-                                return [$doctor->getKey() => AvatarOptions::getOptionString($doctor)];
-                            })->toArray();
-                        })
+                        Forms\Components\Select::make('doctor_id')
+                        ->relationship('doctor', 'name')
                         ->native(false)
+                        ->searchable()
+                        ->preload()
+                        ->required()
                         ->hidden(fn (Get $get) => blank($get('date')))
                         ->live()
                         ->afterStateUpdated(fn (Set $set) => $set('slot_id', null))
@@ -102,29 +93,15 @@ class AppointmentResource extends Resource
 
                             return '';
                         }),
-                    Forms\Components\Select::make('slot_id')
-                        ->native(false)
-                        ->label('Slot')
-                        ->required()
-                        ->options(function (Get $get) {
-                            $doctor = User::find($get('doctor_id'));
-                            $dayOfTheWeek = Carbon::parse($get('date'))->dayOfWeek;
-                            $clinicId = $get('clinic_id');
-                            
-                            return $clinicId ? Slot::availableFor($doctor, $dayOfTheWeek, $clinicId)->get()->pluck('formatted_time', 'id') : [];
-                        })
-                        ->hidden(fn (Get $get) => blank($get('doctor_id')))
-                        ->getOptionLabelFromRecordUsing(fn (Slot $record) => $record->formatted_time)
-                        ->helperText(function ($component) {
-                            if (! $component->getOptions()) {
-                                return new HtmlString(
-                                    '<span class="text-sm text-danger-600 dark:text-danger-400">No time slots available. Please select a different clinic, date or doctor</span>'
-                                );
-                            }
 
-                            return '';
-                        }),
-                    Forms\Components\TextInput::make('description')
+                        TimePicker::make('start_time')
+                        //->prefixIcon('heroicon-m-play')
+                        ->hoursStep(1)
+                        ->minutesStep(30),
+                        TimePicker::make('end_time')
+                        ->hoursStep(1)
+                        ->minutesStep(30),
+                        RichMentionEditor::make('description')
                         ->required(),
                     Forms\Components\Select::make('status')
                         ->native(false)
@@ -143,9 +120,6 @@ class AppointmentResource extends Resource
                 Tables\Columns\TextColumn::make('pet.name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('doctor.name')
                     ->label('Doctor')
                     ->searchable()
@@ -157,8 +131,14 @@ class AppointmentResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->date('M d, Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('slot.formatted_time')
-                    ->label('Time')
+                Tables\Columns\TextColumn::make('start_time')
+                    ->label('Start')
+                    ->badge()
+                    ->time('h:i A')
+                    ->sortable(),
+                    Tables\Columns\TextColumn::make('end_time')
+                    ->label('End')
+                    ->time('h:i A')
                     ->badge()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
@@ -177,9 +157,9 @@ class AppointmentResource extends Resource
                     ->options(AppointmentStatus::class)
             ])
             ->actions([
-                Tables\Actions\Action::make('Confirm')
+                Tables\Actions\Action::make('Atendida')
                     ->action(function (Appointment $record) {
-                        $record->status = AppointmentStatus::Confirmed;
+                        $record->status = AppointmentStatus::Attended;
                         $record->save();
                     })
                     ->visible(fn (Appointment $record) => $record->status == AppointmentStatus::Created)
