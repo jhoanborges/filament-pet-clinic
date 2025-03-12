@@ -15,20 +15,23 @@ class UserSeeder extends Seeder
     {
         User::factory()->role('admin')->create([
             'name' => 'Admin',
-            'email' => 'admin@email.com',
-            'phone' => '5555551234'
+            'email' => 'jhoan.borges@hexagun.mx',
+            'phone' => '5555551234',
+            'password' => bcrypt('12345678'),
         ]);
 
         User::factory()->role('owner')->create([
             'name' => 'Owner',
             'email' => 'owner@email.com',
-            'phone' => '5555551234'
+            'phone' => '5555551234',
+            'password' => bcrypt('12345678'),
         ]);
 
         User::factory()->role('doctor')->create([
             'name' => 'Doctor',
             'email' => 'doctor@email.com',
-            'phone' => '5555551234'
+            'phone' => '5555551234',
+            'password' => bcrypt('12345678'),
         ]);
     }
 }
