@@ -38,7 +38,10 @@ class DoctorPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->tenant(Clinic::class)
-            ->tenantMiddleware([ApplyTenantScopes::class], isPersistent: true)
+            ->tenantMiddleware([
+                ApplyTenantScopes::class,
+                \Hasnayeen\Themes\Http\Middleware\SetTheme::class
+            ], isPersistent: true)
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\\Filament\\Doctor\\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\\Filament\\Doctor\\Pages')
             ->pages([
@@ -67,6 +70,9 @@ class DoctorPanelProvider extends PanelProvider
             ->databaseTransactions()
             ->unsavedChangesAlerts()
             ->tenantBillingProvider(new BillingProvider('default'))
-            ->requiresTenantSubscription();
+            ->requiresTenantSubscription()
+            ->plugin(
+                \Hasnayeen\Themes\ThemesPlugin::make()
+            );
     }
 }

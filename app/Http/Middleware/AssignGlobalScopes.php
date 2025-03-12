@@ -40,7 +40,6 @@ class AssignGlobalScopes
             }
         });
 
-
         return $next($request);
     }
 }

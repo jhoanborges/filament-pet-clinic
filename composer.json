@@ -12,6 +12,7 @@
         "asmit/filament-mention": "^1.0",
         "filament/filament": "^3.0-stable",
         "guzzlehttp/guzzle": "^7.2",
+        "hasnayeen/themes": "^3.0",
         "husam-tariq/filament-timepicker": "^3.0",
         "laravel/cashier": "^15.6",
         "laravel/framework": "^11.0",
