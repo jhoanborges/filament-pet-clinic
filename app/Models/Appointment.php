@@ -24,8 +24,8 @@ class Appointment extends Model implements Sortable
     protected $casts = [
         'status' => AppointmentStatus::class,
         'date' => 'datetime',
-        'start_time' => 'datetime',
-        'end_time' => 'datetime'
+        'start_time' => 'datetime:H:i:s',
+        'end_time' => 'datetime:H:i:s',
     ];
 
     public function pet(): BelongsTo

@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\HtmlString;
+use HusamTariq\FilamentTimePicker\Forms\Components\TimePickerField;
 
 class AppointmentResource extends Resource
 {
@@ -76,6 +77,11 @@ class AppointmentResource extends Resource
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn (Set $set) => $set('slot_id', null)),
+                    
+
+                    TimePickerField::make('start_time')->label('Start Time')->okLabel("Confirm")->cancelLabel("Cancel"),
+                    TimePickerField::make('end_time')->label('End Time')->okLabel("Confirm")->cancelLabel("Cancel"),
+                /*
                 Forms\Components\Select::make('slot_id')
                     ->native(false)
                     //->required()
@@ -98,6 +104,8 @@ class AppointmentResource extends Resource
 
                         return '';
                     }),
+
+                    */
                 Forms\Components\TextInput::make('description')
                     ->required(),
                 Forms\Components\Select::make('status')

@@ -18,8 +18,8 @@ return new class () extends Migration {
                 ->constrained('pets')
                 ->cascadeOnDelete();
             $table->string('status')->default('created');
-            $table->datetime('start_time')->nullable();
-            $table->datetime('end_time')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->string('order_column')->nullable();
             $table->boolean('sort_when_creating')->default(false);
             $table->string('slot_id')->nullable();            
