@@ -21,6 +21,7 @@
         "maartenpaauw/filament-cashier-billing-provider": "^2.2",
         "mokhosh/filament-kanban": "^2.9",
         "spatie/eloquent-sortable": "^4.4",
+        "tomatophp/filament-logger": "^1.0",
         "ysfkaya/filament-phone-input": "^3.1"
     },
     "require-dev": {
