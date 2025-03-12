@@ -3,15 +3,17 @@
 namespace App\Models;
 
 use App\Enums\AppointmentStatus;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\EloquentSortable\Sortable;
+use Guava\Calendar\ValueObjects\Event;
+use Guava\Calendar\Contracts\Eventable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\EloquentSortable\SortableTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Spatie\EloquentSortable\Sortable;
-use Spatie\EloquentSortable\SortableTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Appointment extends Model implements Sortable
+class Appointment extends Model implements Sortable,Eventable
 {
     use HasFactory;
     use SortableTrait;
@@ -28,6 +30,15 @@ class Appointment extends Model implements Sortable
         'end_time' => 'datetime:H:i:s',
     ];
 
+
+    public function toEvent(): Event|array {
+        return Event::make($this)
+        //->resourceIds([$this->id])
+            ->title($this->description)
+            ->start($this->start_time)
+            ->end($this->end_time);
+    }
+    
     public function pet(): BelongsTo
     {
         return $this->belongsTo(Pet::class);

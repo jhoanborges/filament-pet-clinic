@@ -71,6 +71,8 @@ class DoctorPanelProvider extends PanelProvider
             ->unsavedChangesAlerts()
             ->tenantBillingProvider(new BillingProvider('default'))
             ->requiresTenantSubscription()
+            ->theme(asset('css/filament/admin/theme.css'))
+            //->viteTheme('resources/css/filament/admin/theme.css')
             ->plugin(
                 \Hasnayeen\Themes\ThemesPlugin::make()
             );

@@ -31,19 +31,17 @@ class AppointmentFactory extends Factory
         })->inRandomOrder()->first();
 
         return [
-
             'description' => $this->faker->sentence(), // e.g., "Routine checkup for pet"
-            'pet_id' => Pet::factory(), // Creates or references a Pet
+            'pet_id' => Pet::inRandomOrder()->first()->id, // Creates or references a Pet
             'start_time' => $startTime,
             'clinic_id' => Clinic::inRandomOrder()->first()->id,
             'doctor_id' => $doctor->id,
-            'date' => Carbon::now(),
+            'date' => Carbon::now()->addDays($this->faker->numberBetween(1, 30)),
             'end_time' => $endTime,
             'order_column' => $this->faker->optional()->randomNumber(3), // Nullable, random 3-digit number
             'sort_when_creating' => $this->faker->boolean(20), // 20% chance of true
             'created_at' => $this->faker->dateTimeThisYear(),
             'updated_at' => $this->faker->dateTimeThisYear(),
-
             'status' => AppointmentStatus::Created
         ];
     }

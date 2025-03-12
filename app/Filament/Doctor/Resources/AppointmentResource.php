@@ -46,7 +46,7 @@ class AppointmentResource extends Resource
             ->schema([
                 Forms\Components\Select::make('pet_id')
                     ->label('Pet')
-                    ->relationship('pet', 'name')
+                    ->relationship(name: 'pet', titleAttribute: 'name')
                     ->allowHtml()
                     ->searchable()
                     ->preload()

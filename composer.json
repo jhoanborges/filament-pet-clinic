@@ -11,6 +11,7 @@
         "php": "^8.2",
         "asmit/filament-mention": "^1.0",
         "filament/filament": "^3.0-stable",
+        "guava/calendar": "^1.13",
         "guzzlehttp/guzzle": "^7.2",
         "hasnayeen/themes": "^3.0",
         "husam-tariq/filament-timepicker": "^3.0",

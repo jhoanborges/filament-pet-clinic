@@ -17,6 +17,7 @@ class Clinic extends Model
     {
         return $this->belongsToMany(User::class);
     }
+    
 
     public function pets(): BelongsToMany
     {
