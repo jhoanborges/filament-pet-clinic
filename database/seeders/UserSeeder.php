@@ -13,25 +13,27 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->role('admin')->create([
-            'name' => 'Admin',
-            'email' => 'jhoan.borges@hexagun.mx',
-            'phone' => '5555551234',
-            'password' => bcrypt('12345678'),
-        ]);
-
+/*
         User::factory()->role('owner')->create([
             'name' => 'Owner',
-            'email' => 'owner@email.com',
+            'email' => 'jhoan.borges@hexagun.mx',
             'phone' => '5555551234',
-            'password' => bcrypt('12345678'),
+            //'password' => bcrypt('12345678'),
         ]);
+*/
+        User::factory()->role('admin')->create([
+            'name' => 'Admin',
+            'email' => 'admin@hexagun.mx',
+            'phone' => '5555551234',
+            //'password' => bcrypt('12345678'),
+        ]);
+
 
         User::factory()->role('doctor')->create([
             'name' => 'Doctor',
-            'email' => 'doctor@email.com',
+            'email' => 'doctor@hexagun.mx',
             'phone' => '5555551234',
-            'password' => bcrypt('12345678'),
+            //'password' => bcrypt('12345678'),
         ]);
     }
 }

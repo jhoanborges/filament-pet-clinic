@@ -21,12 +21,12 @@ class ApplyTenantScopes
          * @var \App\Models\Clinic $clinic The current clinic
          */
         $clinic = Filament::getTenant();
+
         Pet::addGlobalScope(
             fn (Builder $query) =>
                 $query->whereHas('clinics', fn (Builder $query) =>
                     $query->where('clinics.id', $clinic->id))
         );
-
         return $next($request);
     }
 }

@@ -2,15 +2,16 @@
 
 namespace App\Filament\Doctor\Resources;
 
-use App\Enums\PetType;
-use App\Filament\Doctor\Resources\PetResource\Pages;
 use App\Models\Pet;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Enums\PetType;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Facades\Filament;
+use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Doctor\Resources\PetResource\Pages;
 
 class PetResource extends Resource
 {
@@ -21,6 +22,17 @@ class PetResource extends Resource
     protected static ?int $navigationSort = 3;
 
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return Filament::getTenant()->pets->count();
+    }
+
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name'];
+    }
 
     public static function form(Form $form): Form
     {
@@ -40,8 +52,8 @@ class PetResource extends Resource
                     Forms\Components\Select::make('type')
                         ->native(false)
                         ->options(PetType::class),
-                    Forms\Components\Select::make('owner_id')
-                        ->relationship('owner', 'name')
+                    Forms\Components\Select::make('client_id')
+                        ->relationship('client', 'name')
                         ->native(false)
                         ->searchable()
                         ->preload()

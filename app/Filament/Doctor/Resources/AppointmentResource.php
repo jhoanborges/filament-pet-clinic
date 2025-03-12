@@ -31,6 +31,12 @@ class AppointmentResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Filament::getTenant()->appointments->count();
+    }
+
+
     public static function form(Form $form): Form
     {
         $doctorRole = Role::whereName('doctor')->first();
@@ -39,15 +45,17 @@ class AppointmentResource extends Resource
             ->schema([
                 Forms\Components\Select::make('pet_id')
                     ->label('Pet')
+                    ->relationship('pet', 'name')
                     ->allowHtml()
                     ->searchable()
+                    ->preload()
                     ->required()
                     ->helperText(fn () 
                         => Filament::getTenant()->pets->isEmpty() ? new HtmlString(
                             '<span class="text-sm text-danger-600 dark:text-danger-400">No pets available for this clinic.</span>'
                         ) : '')
-                    ->columnSpanFull()
-                    ->getSearchResultsUsing(function (string $search) {
+                    ->columnSpanFull(),
+                    /*->getSearchResultsUsing(function (string $search) {
                         $pets = Pet::where('name', 'like', "%{$search}%")->limit(50)->get();
                     
                         return $pets->mapWithKeys(function ($pet) {
@@ -60,7 +68,7 @@ class AppointmentResource extends Resource
                         return $pets->mapWithKeys(function ($pet) {
                             return [$pet->getKey() => AvatarOptions::getOptionString($pet)];
                         })->toArray();
-                    }),
+                    }),*/
                 Forms\Components\DatePicker::make('date')
                     ->native(false)
                     ->displayFormat('M d, Y')
@@ -70,7 +78,7 @@ class AppointmentResource extends Resource
                     ->afterStateUpdated(fn (Set $set) => $set('slot_id', null)),
                 Forms\Components\Select::make('slot_id')
                     ->native(false)
-                    ->required()
+                    //->required()
                     ->label('Slot')
                     ->options(function (Get $get) {
                         $clinic = Filament::getTenant();
@@ -170,11 +178,12 @@ class AppointmentResource extends Resource
             'edit' => Pages\EditAppointment::route('/{record}/edit'),
         ];
     }
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::new()->count();
     }
+    */
 
     public static function getNavigationBadgeColor(): ?string
     {

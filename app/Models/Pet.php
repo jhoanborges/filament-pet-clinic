@@ -47,4 +47,10 @@ class Pet extends Model
     {
         return $this->morphMany(Note::class, 'notable');
     }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
+    }
+
 }

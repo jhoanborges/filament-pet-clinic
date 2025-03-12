@@ -22,6 +22,7 @@ return new class () extends Migration {
             $table->datetime('end_time')->nullable();
             $table->string('order_column')->nullable();
             $table->boolean('sort_when_creating')->default(false);
+            $table->string('slot_id')->nullable();            
             $table->timestamps();
         });
     }

@@ -2,25 +2,26 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\EditProfile;
-use App\Http\Middleware\ApplyTenantScopes;
-use App\Http\Middleware\AssignGlobalScopes;
-use App\Models\Clinic;
-use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
+use Filament\Widgets;
+use App\Models\Clinic;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\AuthenticateSession;
+use App\Filament\Pages\Auth\EditProfile;
+use App\Http\Middleware\ApplyTenantScopes;
+use Filament\Http\Middleware\Authenticate;
+use App\Http\Middleware\AssignGlobalScopes;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Filament\Http\Middleware\AuthenticateSession;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Maartenpaauw\Filament\Cashier\Stripe\BillingProvider;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class DoctorPanelProvider extends PanelProvider
 {
@@ -29,11 +30,12 @@ class DoctorPanelProvider extends PanelProvider
         return $panel
             ->id('doctor')
             ->path('doctor')
+            ->spa()
             ->login()
             ->profile(EditProfile::class)
             ->passwordReset()
             ->colors([
-                'primary' => Color::Sky,
+                'primary' => Color::Amber,
             ])
             ->tenant(Clinic::class)
             ->tenantMiddleware([ApplyTenantScopes::class], isPersistent: true)
@@ -61,6 +63,10 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->databaseTransactions()
+            ->unsavedChangesAlerts()
+            ->tenantBillingProvider(new BillingProvider('default'))
+            ->requiresTenantSubscription();
     }
 }

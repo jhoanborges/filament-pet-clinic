@@ -29,6 +29,9 @@ return new class extends Migration
             //$table->boolean('allow_whatsapp_notification')->default(false);
             $table->boolean('allow_email_notification')->default(false);
           
+            $table->foreignId('clinic_id')->nullable()->constrained('clinics')->onDelete('set null');
+
+
             $table->timestamps();
         });
     }

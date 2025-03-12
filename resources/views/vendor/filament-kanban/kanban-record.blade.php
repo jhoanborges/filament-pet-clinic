@@ -15,8 +15,8 @@
     @endif
 >
     {{--<p>{{ $record->{static::$recordTitleAttribute} }}</p>--}}
-    <p>Pet: {{ $record->pet()->first()->name }}</p>
-    <p>Doctor: {{ $record->doctor()->first()->username }}</p>
+    <p>Pet: {{ $record->pet()->first()->name ?? 'N/A' }}</p>
+    <p>Doctor: {{ $record->doctor()->first()->username ?? 'N/A' }}</p>
     <p>Date: {{ $record->date ? Carbon\Carbon::parse($record->date)->format('d/M/Y') : 'N/A' }}</p>
     <p>Start Time: {{ $record->start_time ? Carbon\Carbon::parse($record->start_time)->format('h:i A') : 'N/A' }}</p>
     <p>Start Time: {{ $record->end_time ? Carbon\Carbon::parse($record->end_time)->format('h:i A') : 'N/A' }}</p>

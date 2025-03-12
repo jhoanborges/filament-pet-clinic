@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Doctor\Pages;
 
 use App\Models\Appointment;
 use App\Enums\AppointmentStatus;
@@ -29,7 +29,7 @@ class AppointmentsKanbanBoard extends KanbanBoard
     {
         return Appointment::all();
     }
-
+/*
     protected function getEditModalFormSchema(null|int $recordId): array
 {
     return [
@@ -41,5 +41,6 @@ class AppointmentsKanbanBoard extends KanbanBoard
         ->minutesStep(30),
     ];
 }
+*/
 
 }

@@ -2,6 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\EditProfile;
+use App\Http\Middleware\ApplyTenantScopes;
+use App\Http\Middleware\AssignGlobalScopes;
+use App\Models\Clinic;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -17,28 +21,30 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Maartenpaauw\Filament\Cashier\Stripe\BillingProvider;
 
-class AdminPanelProvider extends PanelProvider
+class _DoctorPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-        ->spa()
-            ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('doctor')
+            ->path('doctor')
+            ->spa()
             ->login()
-            ->registration()
+            ->profile(EditProfile::class)
             ->passwordReset()
             ->colors([
-                'primary' => Color::Emerald,
+                'primary' => Color::Sky,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->tenant(Clinic::class)
+            ->tenantMiddleware([ApplyTenantScopes::class], isPersistent: true)
+            ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\\Filament\\Doctor\\Resources')
+            ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\\Filament\\Doctor\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Doctor/Widgets'), for: 'App\\Filament\\Doctor\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -53,10 +59,14 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                AssignGlobalScopes::class
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
-    
+            ])
+            ->databaseTransactions()
+            ->unsavedChangesAlerts()
+            ->tenantBillingProvider(new BillingProvider('default'))
+            ->requiresTenantSubscription();
     }
 }

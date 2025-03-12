@@ -170,7 +170,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
-        App\Providers\Filament\OwnerPanelProvider::class,
+        //App\Providers\Filament\OwnerPanelProvider::class,
         App\Providers\Filament\DoctorPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,

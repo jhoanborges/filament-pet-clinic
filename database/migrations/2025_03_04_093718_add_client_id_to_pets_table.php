@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('pets', function (Blueprint $table) {
             $table->foreignId('client_id')->nullable()->constrained('clients')->onDelete('set null');
+            $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('set null');
         });
     }
 
