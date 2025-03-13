@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Client;
 use App\Models\Pet;
 use Closure;
 use Filament\Facades\Filament;
@@ -21,9 +22,16 @@ class ApplyTenantScopes
          * @var \App\Models\Clinic $clinic The current clinic
          */
         $clinic = Filament::getTenant();
+
         Pet::addGlobalScope(
             fn (Builder $query) =>
                 $query->whereHas('clinics', fn (Builder $query) =>
+                    $query->where('clinics.id', $clinic->id))
+        );
+        
+        Client::addGlobalScope(
+            fn (Builder $query) =>
+                $query->whereHas('clinic', fn (Builder $query) =>
                     $query->where('clinics.id', $clinic->id))
         );
 

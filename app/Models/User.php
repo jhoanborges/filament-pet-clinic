@@ -18,9 +18,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable implements HasTenants, FilamentUser, HasAvatar
 {
+    use Billable;
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
@@ -111,4 +113,17 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
             get: fn ($value, $attributes) => $attributes['avatar_url']
         );
     }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function scopeOwner($query, $owner)
+    {
+        return $query->where('owner_id', $owner->id);
+    }
+
+    
+    
 }

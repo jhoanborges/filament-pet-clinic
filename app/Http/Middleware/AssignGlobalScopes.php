@@ -19,12 +19,27 @@ class AssignGlobalScopes
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $user = Filament::auth()->user();
+
         Schedule::addGlobalScope(function (Builder $query) {
             $query->whereBelongsTo(Filament::auth()->user(), 'owner');
         });
-        Appointment::addGlobalScope(function (Builder $query) {
+        /*Appointment::addGlobalScope(function (Builder $query) {
             $query->whereBelongsTo(Filament::auth()->user(), 'doctor');
         });
+        */
+
+        // Apply Appointment scope for doctors
+        Appointment::addGlobalScope('doctorFilter', function (Builder $query) use ($user) {
+            if ($user && $user->role) {
+                if ($user->role->name === 'doctor') {
+                    $query->where('doctor_id', $user->id);
+                } elseif ($user->role->name === 'admin') {
+                    // No filtering for admins, they see all
+                }
+            }
+        });
+
         return $next($request);
     }
 }

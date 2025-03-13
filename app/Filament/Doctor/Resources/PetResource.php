@@ -2,15 +2,18 @@
 
 namespace App\Filament\Doctor\Resources;
 
-use App\Enums\PetType;
-use App\Filament\Doctor\Resources\PetResource\Pages;
 use App\Models\Pet;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Enums\PetType;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Facades\Filament;
+use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Doctor\Resources\PetResource\Pages;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Tabs;
 
 class PetResource extends Resource
 {
@@ -22,30 +25,69 @@ class PetResource extends Resource
 
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Filament::getTenant()->pets->count();
+    }
+
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name'];
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
-                    Forms\Components\FileUpload::make('avatar')
-                        ->image()
-                        ->imageEditor(),
-                    Forms\Components\TextInput::make('name')
-                        ->required(),
-                    Forms\Components\DatePicker::make('date_of_birth')
-                        ->native(false)
-                        ->required()
-                        ->closeOnDateSelection()
-                        ->displayFormat('M d Y'),
-                    Forms\Components\Select::make('type')
-                        ->native(false)
-                        ->options(PetType::class),
-                    Forms\Components\Select::make('owner_id')
-                        ->relationship('owner', 'name')
-                        ->native(false)
-                        ->searchable()
-                        ->preload()
-                ])
+
+                Tabs::make('Tabs')
+                    ->columnSpanFull()
+                    ->tabs([
+                        Tabs\Tab::make('Pet information')
+                            ->schema([
+
+                                Forms\Components\FileUpload::make('avatar')
+                                ->avatar()
+                                    ->image()
+                                    ->imageEditor(),
+                                Forms\Components\TextInput::make('name')
+                                    ->required(),
+                                Forms\Components\DatePicker::make('date_of_birth')
+                                    ->native(false)
+                                    ->required()
+                                    ->closeOnDateSelection()
+                                    ->displayFormat('M d Y'),
+                                Forms\Components\Select::make('type')
+                                    ->native(false)
+                                    ->options(PetType::class),
+                                Forms\Components\Select::make('client_id')
+                                    ->relationship('client', 'name')
+                                    ->native(false)
+                                    ->searchable()
+                                    ->preload(),
+                            ]),
+                        Tabs\Tab::make('Files')
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('media')
+                                    ->openable()
+                                    ->panelLayout('grid')
+                                    ->downloadable()
+                                    ->previewable()
+                                    ->multiple()
+                                    ->reorderable()
+                                    ->disk('pets')
+                                    ->collection('pets')
+                                    ->maxFiles(100)
+                            ]),
+                        /*Tabs\Tab::make('Tab 3')
+        ->schema([
+            // ...
+        ]),
+        */
+                    ]),
+
+
             ]);
     }
 

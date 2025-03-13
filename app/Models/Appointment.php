@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Enums\AppointmentStatus;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\EloquentSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\EloquentSortable\SortableTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Spatie\EloquentSortable\Sortable;
-use Spatie\EloquentSortable\SortableTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Appointment extends Model implements Sortable
 {
@@ -24,8 +24,8 @@ class Appointment extends Model implements Sortable
     protected $casts = [
         'status' => AppointmentStatus::class,
         'date' => 'datetime',
-        'start_time' => 'datetime',
-        'end_time' => 'datetime'
+        'start_time' => 'datetime:H:i:s',
+        'end_time' => 'datetime:H:i:s',
     ];
 
     public function pet(): BelongsTo

@@ -41,8 +41,10 @@ class PetResource extends Resource
     public static function table(Table $table): Table
     {
         $owner = Filament::auth()->user();
+
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->owner($owner))
+            //->modifyQueryUsing(fn (Builder $query) => $query->owner($owner))
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('owner_id', $owner->id))
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('date_of_birth')

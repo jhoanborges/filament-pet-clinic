@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'America/Monterrey'),
 
     'date_format' => env('APP_DATE_FORMAT', 'M d, Y'),
 
@@ -170,8 +170,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
-        App\Providers\Filament\OwnerPanelProvider::class,
         App\Providers\Filament\DoctorPanelProvider::class,
+        //App\Providers\Filament\OwnerPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
     ])->toArray(),

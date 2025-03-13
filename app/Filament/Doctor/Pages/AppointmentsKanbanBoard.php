@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Doctor\Pages;
 
 use App\Models\Appointment;
+use Filament\Facades\Filament;
 use App\Enums\AppointmentStatus;
 use Illuminate\Support\Collection;
 use Filament\Forms\Components\TextInput;
@@ -27,9 +28,11 @@ class AppointmentsKanbanBoard extends KanbanBoard
 
     protected function records(): Collection
     {
-        return Appointment::all();
-    }
+        return Filament::getTenant()->appointments;
 
+        //return Appointment::all();
+    }
+/*
     protected function getEditModalFormSchema(null|int $recordId): array
 {
     return [
@@ -41,5 +44,6 @@ class AppointmentsKanbanBoard extends KanbanBoard
         ->minutesStep(30),
     ];
 }
+*/
 
 }

@@ -3,8 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Role;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
+use App\Models\Clinic;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -49,4 +52,19 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    public function configure(): static
+    {
+        return $this->afterMaking(function (User $user) {
+            // ...
+        })->afterCreating(function (User $user) {
+            DB::table('clinic_user')->insert([
+                'clinic_id' => Clinic::inRandomOrder()->first()->id,
+                'user_id' => $user->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
+    }
+
 }
