@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Clinic;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -32,6 +33,8 @@ class ClientFactory extends Factory
             'allow_email_notification' => $this->faker->boolean(50), // 50% chance of true
             'created_at' => $this->faker->dateTimeThisYear(),
             'updated_at' => $this->faker->dateTimeThisYear(),
+            'clinic_id' => Clinic::inRandomOrder()->first()->id,
+
         ];
     }
 }

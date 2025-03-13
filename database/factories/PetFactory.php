@@ -22,10 +22,10 @@ class PetFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->firstName(),
             'date_of_birth' => fake()->date(),
             'type' => 'dog',
-            'avatar' => 'avatar.png',
+            //'avatar' => fake()->imageUrl(640, 480, 'animals', true),
             'client_id' => Client::inRandomOrder()->first()->id,
 
         ];

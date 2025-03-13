@@ -44,6 +44,15 @@ return [
             'throw' => false,
         ],
 
+        'pets' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/pets'),
+            'url' => env('APP_URL').'/storage/pets',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -12,6 +12,8 @@ use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Storage;
 use App\Filament\Doctor\Resources\PetResource\Pages;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Tabs;
 
 class PetResource extends Resource
 {
@@ -38,26 +40,53 @@ class PetResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
-                    Forms\Components\FileUpload::make('avatar')
-                        ->image()
-                        ->imageEditor(),
-                    Forms\Components\TextInput::make('name')
-                        ->required(),
-                    Forms\Components\DatePicker::make('date_of_birth')
-                        ->native(false)
-                        ->required()
-                        ->closeOnDateSelection()
-                        ->displayFormat('M d Y'),
-                    Forms\Components\Select::make('type')
-                        ->native(false)
-                        ->options(PetType::class),
-                    Forms\Components\Select::make('client_id')
-                        ->relationship('client', 'name')
-                        ->native(false)
-                        ->searchable()
-                        ->preload()
-                ])
+
+                Tabs::make('Tabs')
+                    ->columnSpanFull()
+                    ->tabs([
+                        Tabs\Tab::make('Pet information')
+                            ->schema([
+
+                                Forms\Components\FileUpload::make('avatar')
+                                    ->image()
+                                    ->imageEditor(),
+                                Forms\Components\TextInput::make('name')
+                                    ->required(),
+                                Forms\Components\DatePicker::make('date_of_birth')
+                                    ->native(false)
+                                    ->required()
+                                    ->closeOnDateSelection()
+                                    ->displayFormat('M d Y'),
+                                Forms\Components\Select::make('type')
+                                    ->native(false)
+                                    ->options(PetType::class),
+                                Forms\Components\Select::make('client_id')
+                                    ->relationship('client', 'name')
+                                    ->native(false)
+                                    ->searchable()
+                                    ->preload(),
+                            ]),
+                        Tabs\Tab::make('Files')
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('media')
+                                    ->openable()
+                                    ->panelLayout('grid')
+                                    ->downloadable()
+                                    ->previewable()
+                                    ->multiple()
+                                    ->reorderable()
+                                    ->disk('pets')
+                                    ->collection('pets')
+                                    ->maxFiles(100)
+                            ]),
+                        /*Tabs\Tab::make('Tab 3')
+        ->schema([
+            // ...
+        ]),
+        */
+                    ]),
+
+
             ]);
     }
 

@@ -1,3 +1,4 @@
 php artisan cashier:webhook --url "https://thankfully-cute-skunk.ngrok-free.app/stripe/webhook"
 
 ngrok http --url=thankfully-cute-skunk.ngrok-free.app 80
+
