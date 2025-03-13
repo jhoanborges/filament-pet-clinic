@@ -48,6 +48,7 @@ class PetResource extends Resource
                             ->schema([
 
                                 Forms\Components\FileUpload::make('avatar')
+                                ->avatar()
                                     ->image()
                                     ->imageEditor(),
                                 Forms\Components\TextInput::make('name')
