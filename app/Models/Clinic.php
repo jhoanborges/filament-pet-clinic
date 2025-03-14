@@ -43,4 +43,10 @@ class Clinic extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function productCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductCategory::class);
+    }
+
+
 }

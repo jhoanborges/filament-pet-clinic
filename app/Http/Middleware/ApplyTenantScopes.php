@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Client;
 use App\Models\Pet;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;

@@ -8,10 +8,12 @@ use App\Models\Product;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Facades\Filament;
+use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Split;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Infolists\Components\Grid;
 use Filament\Forms\Components\TextInput;
@@ -30,15 +32,12 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
+    protected static ?string $navigationGroup = 'Inventory';
 
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->products->count();
     }
-
-
-
-
 
     public static function form(Form $form): Form
     {
@@ -60,6 +59,12 @@ class ProductResource extends Resource
                                 ->required()
                                 ->maxLength(255),
 
+                                Select::make('category_id')
+                                ->label('Category')
+                                ->options(ProductCategory::all()->pluck('name', 'id'))
+                                ->searchable()
+                                ->required(),
+                                
 
                             \Filament\Forms\Components\TextInput::make('price')
                                 ->suffix(config('money.defaults.currency'))
@@ -119,7 +124,7 @@ class ProductResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('description')
+                Tables\Columns\TextColumn::make('category.name')
                     ->limit(50)
             ])
             ->filters([
