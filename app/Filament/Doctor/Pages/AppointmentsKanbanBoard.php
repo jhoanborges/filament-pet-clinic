@@ -19,6 +19,7 @@ class AppointmentsKanbanBoard extends KanbanBoard
     protected static ?string $title = 'Appointments Kanban';
     protected static string $recordStatusAttribute = 'status';
     public bool $disableEditModal = false;
+    protected static ?string $navigationGroup = 'Citas';
 
     protected static string $view = 'filament-kanban::kanban-board';
     protected static string $headerView = 'filament-kanban::kanban-header';

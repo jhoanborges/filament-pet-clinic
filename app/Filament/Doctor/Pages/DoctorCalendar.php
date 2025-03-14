@@ -11,6 +11,7 @@ class DoctorCalendar extends Page
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $title = 'Calendar';
     protected static string $view = 'filament.doctor.pages.doctor-calendar';
+    protected static ?string $navigationGroup = 'Citas';
 
     protected function getHeaderWidgets(): array
     {

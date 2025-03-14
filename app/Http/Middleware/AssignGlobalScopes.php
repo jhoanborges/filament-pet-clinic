@@ -2,12 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Appointment;
-use App\Models\Schedule;
 use Closure;
+use App\Models\Product;
+use App\Models\Schedule;
+use App\Models\Appointment;
+use Illuminate\Http\Request;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AssignGlobalScopes
