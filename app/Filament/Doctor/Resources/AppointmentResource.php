@@ -27,7 +27,7 @@ use HusamTariq\FilamentTimePicker\Forms\Components\TimePickerField;
 class AppointmentResource extends Resource
 {
     protected static ?string $model = Appointment::class;
-
+    protected static ?string $navigationGroup = 'Citas';
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?int $navigationSort = 1;
