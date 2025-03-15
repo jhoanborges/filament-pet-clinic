@@ -16,6 +16,7 @@ use Filament\Forms\Components\Split;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Infolists\Components\Grid;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\RichEditor;
@@ -123,7 +124,11 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('sku')
                     ->sortable()
                     ->searchable(),
-
+                    TextColumn::make('stock')
+                    ->label('Stock')
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state),
+                    
                 Tables\Columns\TextColumn::make('category.name')
                     ->limit(50)
             ])

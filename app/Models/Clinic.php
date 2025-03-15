@@ -48,5 +48,15 @@ class Clinic extends Model
         return $this->belongsToMany(ProductCategory::class);
     }
 
+    public function inventoryTransactions(): BelongsToMany
+    {
+        return $this->belongsToMany(InventoryTransaction::class);
+    }
+
+    public function inventoryLog(): BelongsToMany
+    {
+        return $this->belongsToMany(InventoryLog::class);
+    }
+
 
 }
