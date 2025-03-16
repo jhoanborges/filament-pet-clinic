@@ -25,7 +25,7 @@ class ProductCategoryResource extends Resource
     protected static ?string $navigationLabel = 'Product Categories';
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
     protected static ?string $navigationGroup = 'Inventory';
-
+    protected static ?int $navigationSort = 3;
 
     public static function getNavigationBadge(): ?string
     {

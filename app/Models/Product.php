@@ -15,6 +15,8 @@ class Product extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
+    protected $appends = ['stock'];
+    
     public function inventory()
     {
         return $this->hasOne(Inventory::class);  // A product has one inventory record
@@ -54,4 +56,11 @@ class Product extends Model implements HasMedia
         });
     }
     
+    
+
+    public function orders()
+{
+    return $this->belongsToMany(Order::class);
+}
+
 }

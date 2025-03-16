@@ -57,6 +57,9 @@ class Clinic extends Model
     {
         return $this->belongsToMany(InventoryLog::class);
     }
-
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class);
+    }
 
 }

@@ -34,6 +34,7 @@ class ProductResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
     protected static ?string $navigationGroup = 'Inventory';
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {

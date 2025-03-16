@@ -14,6 +14,15 @@ class InventoryTransaction extends Model
 
     static::created(function ($transaction) {
         foreach ($transaction->products as $product) {
+
+            InventoryLog::create([
+                'inventory_transaction_id' => $transaction->id,
+                'action'                   => $transaction->type, // "entry" or "exit"
+                'product_id'               => $product->id,
+                'quantity'                 => $product->pivot->quantity,
+                'notes'                    => 'Logged automatically on transaction creation.',
+            ]);
+            
             if ($transaction->type === 'entry') {
                 $product->increment('stock', $product->pivot->quantity);
             } else {

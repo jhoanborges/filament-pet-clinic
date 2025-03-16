@@ -26,6 +26,7 @@ class InventoryTransactionResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Inventory';
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationBadge(): ?string
     {
