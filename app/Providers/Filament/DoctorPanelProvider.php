@@ -29,6 +29,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 use App\Filament\Doctor\Widgets\AppointmentsCalendarWidget;
+use App\Filament\Widgets\TotalCustomersChart;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
@@ -72,6 +73,7 @@ class DoctorPanelProvider extends PanelProvider
                 StatsOverview::class,
                 AppointmentsChart::class,
                 OrderMoneyChart::class,
+                TotalCustomersChart::class,
                 AppointmentsCalendarWidget::class,
                 //Widgets\FilamentInfoWidget::class,
             ])
