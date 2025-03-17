@@ -26,6 +26,11 @@ class Product extends Model implements HasMedia
         return $this->belongsTo(Clinic::class, 'clinic_id');
     }
     
+    public function clinic(): BelongsTo
+    {
+        return $this->belongsTo(Clinic::class, 'clinic_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(ProductCategory::class, 'category_id');

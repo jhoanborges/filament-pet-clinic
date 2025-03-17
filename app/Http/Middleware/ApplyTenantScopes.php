@@ -38,6 +38,13 @@ class ApplyTenantScopes
                     $query->where('clinics.id', $clinic->id))
         );
 
+        Product::addGlobalScope(
+            fn (Builder $query) =>
+                $query->whereHas('clinic', fn (Builder $query) =>
+                    $query->where('clinics.id', $clinic->id))
+        );
+
+
         /*
         InventoryTransaction::addGlobalScope(
             fn (Builder $query) =>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inventory_transactions', function (Blueprint $table) {
             $table->id();
             $table->string('reference');
-            //$table->foreignId('clinic_id')->nullable()->constrained('clinics')->onDelete('set null');
+            $table->foreignId('order_id')->nullable()->constrained('orders')->nullable()->onDelete('set null');
             $table->enum('type', ['entry', 'exit']); // Entrada o salida
             $table->timestamps();
         });

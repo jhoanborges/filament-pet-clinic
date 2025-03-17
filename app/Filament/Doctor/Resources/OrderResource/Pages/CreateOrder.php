@@ -27,6 +27,7 @@ class CreateOrder extends CreateRecord
 
         //cuando se crea una orden de venta, entonces se hace una salida de inventario
         $inventoryTransaction = InventoryTransaction::create([
+            'order_id' => $order->id,
             'reference' => uniqid(),
             'type' => 'exit'
         ]);

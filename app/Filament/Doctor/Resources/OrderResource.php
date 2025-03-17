@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Doctor\Resources\OrderResource\Pages;
 use App\Filament\Doctor\Resources\OrderResource\RelationManagers;
 use App\Filament\Doctor\Resources\OrderResource\RelationManagers\ProductsRelationManager;
+use App\Models\InventoryTransaction;
+use App\Models\InventoryTransactionProduct;
 use Filament\Notifications\Notification;
 use Filament\Notifications\Actions\Action;
 
@@ -172,6 +174,15 @@ class OrderResource extends Resource
             ])
             ->actions([
                 //Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                ->before(function (Order $order) {
+                    //to be deleted
+                    $inventoryTransaction = InventoryTransaction::with('products')->where('order_id', $order->id);
+                    //multiple products to be deleted
+                    InventoryTransactionProduct::where('inventory_transaction_id', $inventoryTransaction->first()->id)->delete();
+                    // Runs after the form fields are saved to the database.
+                    $inventoryTransaction->delete();
+                }),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([

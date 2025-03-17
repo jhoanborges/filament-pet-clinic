@@ -25,6 +25,8 @@ class AssignGlobalScopes
         Schedule::addGlobalScope(function (Builder $query) {
             $query->whereBelongsTo(Filament::auth()->user(), 'owner');
         });
+
+
         /*Appointment::addGlobalScope(function (Builder $query) {
             $query->whereBelongsTo(Filament::auth()->user(), 'doctor');
         });
