@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,6 +34,19 @@ class Clinic extends Model
     {
         return $this->hasMany(Appointment::class);
     }
+
+    public function activeAppointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class)->where('status', 'created');
+    }
+
+    public function todaysAppointments(): HasMany
+    {
+        
+        return $this->hasMany(Appointment::class)->where('status', 'created')->where('date', Carbon::today()->format('Y-m-d'));
+    }
+
+
     public function clients(): HasMany
     {
         return $this->hasMany(Client::class);

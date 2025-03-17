@@ -11,10 +11,13 @@ use Filament\Facades\Filament;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\MaxWidth;
 use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Widgets\OrderMoneyChart;
 use App\Http\Middleware\ApplyTenantScopes;
 use Filament\Http\Middleware\Authenticate;
+use App\Filament\Widgets\AppointmentsChart;
 use App\Http\Middleware\AssignGlobalScopes;
 use App\Filament\Doctor\Pages\DoctorCalendar;
+use App\Filament\Doctor\Widgets\StatsOverview;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -25,6 +28,8 @@ use Maartenpaauw\Filament\Cashier\Stripe\BillingProvider;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
+use App\Filament\Doctor\Widgets\AppointmentsCalendarWidget;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class DoctorPanelProvider extends PanelProvider
@@ -39,8 +44,8 @@ class DoctorPanelProvider extends PanelProvider
         return $panel
             ->id('doctor')
             ->path('doctor')
-            //->maxContentWidth(MaxWidth::Full)
-            //->simplePageMaxContentWidth(MaxWidth::Small)
+            ->maxContentWidth(MaxWidth::Full)
+            //->simplePageMaxContentWidth(MaxWidth::Full)
             ->spa()
             ->spaUrlExceptions(fn(): array => [
                 '*/doctor/' . $tenant . '/doctor-calendar'
@@ -61,10 +66,14 @@ class DoctorPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Doctor/Widgets'), for: 'App\\Filament\\Doctor\\Widgets')
+            //->discoverWidgets(in: app_path('Filament/Doctor/Widgets'), for: 'App\\Filament\\Doctor\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                StatsOverview::class,
+                AppointmentsChart::class,
+                OrderMoneyChart::class,
+                AppointmentsCalendarWidget::class,
+                //Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -87,7 +96,7 @@ class DoctorPanelProvider extends PanelProvider
             ->requiresTenantSubscription()
             ->theme(asset('css/filament/admin/theme.css'))
             //->viteTheme('resources/css/filament/admin/theme.css')
-            ->plugin(
+            ->plugins([
                 FilamentFullCalendarPlugin::make()
                     ->selectable()
                     ->editable(true)
@@ -96,8 +105,9 @@ class DoctorPanelProvider extends PanelProvider
                     ->plugins(['dayGrid', 'timeGrid'])
                     ->config([]),
                 \Hasnayeen\Themes\ThemesPlugin::make(),
+                FilamentApexChartsPlugin::make()
                 //->schedulerLicenseKey()
-            );
+            ]);
     }
 
     function getTenantId($url)

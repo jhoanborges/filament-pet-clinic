@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Doctor\Resources\OrderResource\Pages;
 use App\Filament\Doctor\Resources\OrderResource\RelationManagers;
 use App\Filament\Doctor\Resources\OrderResource\RelationManagers\ProductsRelationManager;
+use DesignTheBox\BarcodeField\Forms\Components\BarcodeInput;
+use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action;
 
 class OrderResource extends Resource
 {
@@ -104,6 +107,39 @@ class OrderResource extends Resource
                     ->relationship()
                     ->columnSpanFull()
                     ->schema([
+
+
+                        TextInput::make('sku')
+                        ->label('SKU')
+                        ->live(onBlur: true)
+                        //->icon('heroicon-o-arrow-right')          ->live()
+                        ->afterStateUpdated(function (Set $set, $state) {
+                            $record = \App\Models\Product::where('sku', $state)->first();
+                            if ($record) {
+                               // dd($record);
+                                $set('product_id', $record->id);
+                                $set('quantity', 1);
+                                $set('quantity_available', $record->stock);
+                                $set('price', $record->price);
+                            }else{
+                                Notification::make()
+                                ->color('warning')
+                                ->warning()
+                                ->title('Product error!')
+                                ->body('The selected product does not exist.')
+                                ->persistent(false)
+                                ->duration(10000)
+                                ->icon('heroicon-o-x-circle')
+                                ->actions([
+                                    Action::make('View Products')
+                                    ->button()
+                                    ->url(route('filament.doctor.resources.products.index', ['tenant' => Filament::getTenant()->id]), shouldOpenInNewTab: true),
+                                ])
+                                ->send();
+                            }
+                        }),
+                        
+
                         Select::make('product_id')
                         ->searchable()
                         ->preload()
@@ -118,6 +154,8 @@ class OrderResource extends Resource
                                     $set('price', $record->price);
                                 }
                             }),
+
+/*
                             TextInput::make('sku')
                             ->label('SKU')
                             ->live()
@@ -131,7 +169,7 @@ class OrderResource extends Resource
                                     $set('product_id', $record->id);
                                 }
                             }),
-
+*/
 
                             TextInput::make('quantity_available')
                             ->label('Cantidad Disponible')
