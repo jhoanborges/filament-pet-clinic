@@ -34,7 +34,7 @@ class AppointmentResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Filament::getTenant()->appointments->count();
+        return Filament::getTenant()->activeAppointments->count();
     }
 
 

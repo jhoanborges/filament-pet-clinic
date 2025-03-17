@@ -21,11 +21,14 @@ class PetFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = \Faker\Factory::create();
+        $faker->addProvider(new \Smknstd\FakerPicsumImages\FakerPicsumImagesProvider($faker));
+
         return [
             'name' => fake()->firstName(),
             'date_of_birth' => fake()->date(),
             'type' => 'dog',
-            //'avatar' => fake()->imageUrl(640, 480, 'animals', true),
+            'avatar' => $faker->imageUrl(400, 400),
             'client_id' => Client::inRandomOrder()->first()->id,
 
         ];

@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             AppointmentSeeder::class,
+            ProductSeeder::class,
+            OrderSeeder::class,
+            ClinicOrderSeeder::class,
         ]);
     }
 }

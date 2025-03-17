@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use App\Models\Client;
+use App\Models\InventoryTransaction;
 use App\Models\Pet;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,6 +37,21 @@ class ApplyTenantScopes
                 $query->whereHas('clinic', fn (Builder $query) =>
                     $query->where('clinics.id', $clinic->id))
         );
+
+        Product::addGlobalScope(
+            fn (Builder $query) =>
+                $query->whereHas('clinic', fn (Builder $query) =>
+                    $query->where('clinics.id', $clinic->id))
+        );
+
+
+        /*
+        InventoryTransaction::addGlobalScope(
+            fn (Builder $query) =>
+                $query->whereHas('clinic', fn (Builder $query) =>
+                    $query->where('clinics.id', $clinic->id))
+        );*/
+
 
         return $next($request);
     }

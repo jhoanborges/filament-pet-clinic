@@ -8,12 +8,15 @@ use App\Models\Product;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Facades\Filament;
+use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Split;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Infolists\Components\Grid;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\RichEditor;
@@ -30,15 +33,13 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
+    protected static ?string $navigationGroup = 'Inventory';
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->products->count();
     }
-
-
-
-
 
     public static function form(Form $form): Form
     {
@@ -52,7 +53,11 @@ class ProductResource extends Resource
 
                             Forms\Components\FileUpload::make('image')
                                 ->columnSpanFull()
-                                ->avatar()
+                                //->disk('products')
+                                //->directory('products')
+                                ->openable()
+                                ->downloadable()
+                               ->avatar()
                                 ->image()
                                 ->imageEditor(),
 
@@ -60,6 +65,13 @@ class ProductResource extends Resource
                                 ->required()
                                 ->maxLength(255),
 
+                                Select::make('category_id')
+                                ->label('Category')
+                                ->preload()
+                                ->options(ProductCategory::all()->pluck('name', 'id'))
+                                ->searchable(),
+                                //->required(),
+                                
 
                             \Filament\Forms\Components\TextInput::make('price')
                                 ->suffix(config('money.defaults.currency'))
@@ -111,6 +123,7 @@ class ProductResource extends Resource
 
                 ImageColumn::make('image')
                     ->circular(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
@@ -118,8 +131,12 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('sku')
                     ->sortable()
                     ->searchable(),
-
-                Tables\Columns\TextColumn::make('description')
+                    TextColumn::make('stock')
+                    ->label('Stock')
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state),
+                    
+                Tables\Columns\TextColumn::make('category.name')
                     ->limit(50)
             ])
             ->filters([
