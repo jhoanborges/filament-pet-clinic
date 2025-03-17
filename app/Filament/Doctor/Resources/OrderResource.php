@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Doctor\Resources\OrderResource\Pages;
 use App\Filament\Doctor\Resources\OrderResource\RelationManagers;
 use App\Filament\Doctor\Resources\OrderResource\RelationManagers\ProductsRelationManager;
-use DesignTheBox\BarcodeField\Forms\Components\BarcodeInput;
 use Filament\Notifications\Notification;
 use Filament\Notifications\Actions\Action;
 
@@ -39,70 +38,31 @@ class OrderResource extends Resource
         return Filament::getTenant()->orders->count();
     }
 
-    
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('reference')
                     ->unique(Order::class, 'reference', ignoreRecord: true)
+                    ->default(function () {
+                        $lastOrder = Order::orderBy('id', 'desc')->first();
+                        if ($lastOrder) {
+                            return 'ORD-'.$lastOrder->id + 1;
+                        } else {
+                            return 'ORD-1'; // If no records exist, start with 1
+                        }
+                    })
+                    ->helperText('This ID must be unique')  
                     ->label('Referencia')
                     ->required()
                     ->maxLength(255),
-                /*
-                \Filament\Forms\Components\TextInput::make('total')
-                    ->suffix(config('money.defaults.currency'))
-                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
-                    ->required(),
-
-                \Filament\Forms\Components\TextInput::make('subtotal')
-                    ->suffix(config('money.defaults.currency'))
-                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
-                    ->required(),
-
-                \Filament\Forms\Components\TextInput::make('taxes')
-                    ->suffix(config('money.defaults.currency'))
-                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
-                    ->required(),
-
-                \Filament\Forms\Components\TextInput::make('discount')
-                    ->suffix(config('money.defaults.currency'))
-                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
-                    ->required(),
-
-                Select::make('status')
-                    ->label('Estado')
-                    ->options([
-                        'pending' => 'Pendiente',
-                        'processing' => 'Procesando',
-                        'completed' => 'Completado',
-                        'cancelled' => 'Cancelado',
-                    ])
-                    ->required(),
-
-                Select::make('payment_status')
-                    ->label('Estado de pago')
-                    ->options([
-                        'pending' => 'Pendiente',
-                        'paid' => 'Pagado',
-                        'failed' => 'Fallido',
-                        'refunded' => 'Reembolsado',
-                    ])
-                    ->required(),
-
-                TextInput::make('payment_method')
-                    ->label('Método de pago')
-                    ->nullable(),
-*/
+/*
                 TextInput::make('currency')
                     ->label('Moneda')
                     ->default('MXN')
                     ->required(),
-
-                RichEditor::make('notes')
-                    ->label('Notas')
-                    ->nullable(),
-
+*/
                 Repeater::make('orderProducts')
                     ->relationship()
                     ->columnSpanFull()
@@ -110,40 +70,40 @@ class OrderResource extends Resource
 
 
                         TextInput::make('sku')
-                        ->label('SKU')
-                        ->live(onBlur: true)
-                        //->icon('heroicon-o-arrow-right')          ->live()
-                        ->afterStateUpdated(function (Set $set, $state) {
-                            $record = \App\Models\Product::where('sku', $state)->first();
-                            if ($record) {
-                               // dd($record);
-                                $set('product_id', $record->id);
-                                $set('quantity', 1);
-                                $set('quantity_available', $record->stock);
-                                $set('price', $record->price);
-                            }else{
-                                Notification::make()
-                                ->color('warning')
-                                ->warning()
-                                ->title('Product error!')
-                                ->body('The selected product does not exist.')
-                                ->persistent(false)
-                                ->duration(10000)
-                                ->icon('heroicon-o-x-circle')
-                                ->actions([
-                                    Action::make('View Products')
-                                    ->button()
-                                    ->url(route('filament.doctor.resources.products.index', ['tenant' => Filament::getTenant()->id]), shouldOpenInNewTab: true),
-                                ])
-                                ->send();
-                            }
-                        }),
-                        
+                            ->label('SKU')
+                            ->live(onBlur: true)
+                            //->icon('heroicon-o-arrow-right')          ->live()
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                $record = \App\Models\Product::where('sku', $state)->first();
+                                if ($record) {
+                                    // dd($record);
+                                    $set('product_id', $record->id);
+                                    $set('quantity', 1);
+                                    $set('quantity_available', $record->stock);
+                                    $set('price', $record->price);
+                                } else {
+                                    Notification::make()
+                                        ->color('warning')
+                                        ->warning()
+                                        ->title('Product error!')
+                                        ->body('The selected product does not exist.')
+                                        ->persistent(false)
+                                        ->duration(10000)
+                                        ->icon('heroicon-o-x-circle')
+                                        ->actions([
+                                            Action::make('View Products')
+                                                ->button()
+                                                ->url(route('filament.doctor.resources.products.index', ['tenant' => Filament::getTenant()->id]), shouldOpenInNewTab: true),
+                                        ])
+                                        ->send();
+                                }
+                            }),
+
 
                         Select::make('product_id')
-                        ->searchable()
-                        ->preload()
-                        ->native(false)
+                            ->searchable()
+                            ->preload()
+                            ->native(false)
                             ->relationship('product', 'name')
                             ->required()
                             ->live()
@@ -151,27 +111,12 @@ class OrderResource extends Resource
                                 $record = \App\Models\Product::where('id', $state)->first();
                                 if ($record) {
                                     $set('quantity_available', $record->stock);
+                                    $set('sku', $record->sku);
                                     $set('price', $record->price);
                                 }
                             }),
 
-/*
-                            TextInput::make('sku')
-                            ->label('SKU')
-                            ->live()
-                            //->options(Product::pluck('sku', 'id')->toArray())
-                            ->afterStateUpdated(function (Set $set, $state) {
-                                $record = \App\Models\Product::where('sku', $state)->first();
-                             
-                                if ($record) {
-                                    $set('quantity_available', $record->stock);
-                                    $set('price', $record->price);
-                                    $set('product_id', $record->id);
-                                }
-                            }),
-*/
-
-                            TextInput::make('quantity_available')
+                        TextInput::make('quantity_available')
                             ->label('Cantidad Disponible')
                             ->numeric()
                             ->live()
@@ -183,18 +128,25 @@ class OrderResource extends Resource
                                 }
                             }),
 
-                            \Filament\Forms\Components\TextInput::make('quantity')
+                        \Filament\Forms\Components\TextInput::make('quantity')
                             ->label('Cantidad')
                             ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 0)
                             ->required(),
-                            
+
 
                         \Filament\Forms\Components\TextInput::make('price')
                             ->suffix(config('money.defaults.currency'))
                             ->label('Precio')
                             ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
                             ->required(),
-                    ])->columns(5)
+                    ])->columns(5),
+
+                    RichEditor::make('notes')
+                    ->columnSpanFull()
+                    ->label('Notas')
+                    ->nullable(),
+
+
             ]);
     }
 
@@ -212,17 +164,15 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
+      
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -243,7 +193,7 @@ class OrderResource extends Resource
         return [
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
-            'edit' => Pages\EditOrder::route('/{record}/edit'),
+            //'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
 }

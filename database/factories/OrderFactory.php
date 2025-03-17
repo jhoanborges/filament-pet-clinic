@@ -61,6 +61,7 @@ class OrderFactory extends Factory
                 $order->products()->attach($product->id, [
                     'quantity' => $quantity,
                     'price' => $price,
+                    'sku' => $product->sku,
                     'created_at' => $this->faker->dateTimeBetween("$year-01-01", "$year-12-31"),
                     'updated_at' => $this->faker->dateTimeBetween("$year-01-01", "$year-12-31"),
                 ]);

@@ -19,12 +19,15 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = \Faker\Factory::create();
+        $faker->addProvider(new \Smknstd\FakerPicsumImages\FakerPicsumImagesProvider($faker));
+
         return [
-            'image'       => $this->faker->imageUrl(400, 400, 'products'), // Imagen aleatoria
-            'name'        => $this->faker->words(3, true),
-            'price'       => $this->faker->randomFloat(2, 5, 500), // Precio entre 5 y 500
+            'image'       => $faker->imageUrl(400, 400), // Imagen aleatoria
+            'name'        => $faker->words(3, true),
+            'price'       => $faker->randomFloat(2, 5, 500), // Precio entre 5 y 500
             'sku'         => strtoupper(Str::random(10)), // SKU aleatorio
-            'description' => $this->faker->sentence(),
+            'description' => $faker->sentence(),
             'clinic_id'   => Clinic::inRandomOrder()->value('id') ?? null, // Asigna una clínica aleatoria si hay
         ];
     }

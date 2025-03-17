@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Order::class)->onDelete('cascade');
             $table->foreignIdFor(Product::class)->onDelete('cascade');
+            $table->string('sku');
             $table->decimal('quantity', 16, 2);
             $table->decimal('price', 16, 2);
             $table->timestamps();

@@ -12,7 +12,7 @@ use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 
 class AppointmentsKanbanBoard extends KanbanBoard
 {
-    protected static ?string $navigationIcon = 'heroicon-o-chart-bar-square';
+    protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
     protected static string $model = Appointment::class;
     protected static string $statusEnum = AppointmentStatus::class;
     protected static string $recordTitleAttribute = 'status';

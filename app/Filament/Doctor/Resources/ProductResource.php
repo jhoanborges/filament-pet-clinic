@@ -53,7 +53,11 @@ class ProductResource extends Resource
 
                             Forms\Components\FileUpload::make('image')
                                 ->columnSpanFull()
-                                ->avatar()
+                                //->disk('products')
+                                //->directory('products')
+                                ->openable()
+                                ->downloadable()
+                               ->avatar()
                                 ->image()
                                 ->imageEditor(),
 
@@ -63,9 +67,10 @@ class ProductResource extends Resource
 
                                 Select::make('category_id')
                                 ->label('Category')
+                                ->preload()
                                 ->options(ProductCategory::all()->pluck('name', 'id'))
-                                ->searchable()
-                                ->required(),
+                                ->searchable(),
+                                //->required(),
                                 
 
                             \Filament\Forms\Components\TextInput::make('price')
@@ -118,6 +123,7 @@ class ProductResource extends Resource
 
                 ImageColumn::make('image')
                     ->circular(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
