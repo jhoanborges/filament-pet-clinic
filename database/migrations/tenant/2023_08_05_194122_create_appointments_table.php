@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Slot;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +21,7 @@ return new class () extends Migration {
             $table->time('end_time')->nullable();
             $table->string('order_column')->nullable();
             $table->boolean('sort_when_creating')->default(false);
-            $table->string('slot_id')->nullable();            
+            $table->string('slot_id')->nullable();
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ class CreateAppointment extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['doctor_id'] = Filament::auth()->user()->id;
+        $data['user_id'] = auth()->user()->id;
 
         return $data;
     }

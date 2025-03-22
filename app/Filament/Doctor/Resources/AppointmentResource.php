@@ -7,8 +7,6 @@ use App\Filament\Doctor\Resources\AppointmentResource\Pages;
 use App\Filament\Doctor\Resources\AppointmentResource\RelationManagers\NotesRelationManager;
 use App\Models\Appointment;
 use App\Models\Pet;
-use App\Models\Role;
-use App\Models\Slot;
 use App\Support\AvatarOptions;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -40,7 +38,6 @@ class AppointmentResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $doctorRole = Role::whereName('doctor')->first();
 
         return $form
             ->schema([
@@ -51,10 +48,6 @@ class AppointmentResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->helperText(fn ()
-                        => Filament::getTenant()->pets->isEmpty() ? new HtmlString(
-                            '<span class="text-sm text-danger-600 dark:text-danger-400">No pets available for this clinic.</span>'
-                        ) : '')
                     ->columnSpanFull(),
                     /*->getSearchResultsUsing(function (string $search) {
                         $pets = Pet::where('name', 'like', "%{$search}%")->limit(50)->get();
@@ -70,14 +63,12 @@ class AppointmentResource extends Resource
                             return [$pet->getKey() => AvatarOptions::getOptionString($pet)];
                         })->toArray();
                     }),*/
-                Forms\Components\DatePicker::make('date')
+
+                    Forms\Components\DatePicker::make('date')
                     ->native(false)
                     ->displayFormat('M d, Y')
                     ->closeOnDateSelection()
-                    ->required()
-                    ->live()
-                    ->afterStateUpdated(fn (Set $set) => $set('slot_id', null)),
-
+                    ->required(),
 
                     TimePickerField::make('start_time')->label('Start Time')->okLabel("Confirm")->cancelLabel("Cancel"),
                     TimePickerField::make('end_time')->label('End Time')->okLabel("Confirm")->cancelLabel("Cancel"),

@@ -20,7 +20,7 @@ class Appointment extends Model implements Sortable
         'order_column_name' => 'order_column',
         'sort_when_creating' => true,
     ];
-    
+
     protected $casts = [
         'status' => AppointmentStatus::class,
         'date' => 'datetime',
@@ -33,22 +33,14 @@ class Appointment extends Model implements Sortable
         return $this->belongsTo(Pet::class);
     }
 
-    public function slot(): BelongsTo
-    {
-        return $this->belongsTo(Slot::class);
-    }
-
     public function clinic(): BelongsTo
     {
         return $this->belongsTo(Clinic::class);
     }
 
-    public function doctor(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'doctor_id')
-            ->whereHas('role', function ($query) {
-                $query->where('name', 'doctor');
-            });
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function scopeNew(Builder $query): void
