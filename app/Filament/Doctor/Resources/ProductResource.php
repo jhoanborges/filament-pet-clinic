@@ -102,7 +102,7 @@ class ProductResource extends Resource
                                 ->multiple()
                                 ->reorderable()
                                 ->disk('r2')
-                                ->collection('products')
+                                ->directory('products')
                                 ->maxFiles(100)
 
                         ]),
