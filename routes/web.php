@@ -29,6 +29,6 @@ Route::get('/subscription-checkout', function (Request $request) {
         ->allowPromotionCodes()
         ->checkout([
             'success_url' => route('filament.doctor.pages.dashboard'),
-            //'cancel_url' => route('your-cancel-route'),
+            'cancel_url' => route('home'),
         ]);
 })->name('subscription-checkout');
