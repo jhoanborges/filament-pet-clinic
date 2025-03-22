@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Carbon\Carbon;
 use Filament\Panel;
 use Laravel\Cashier\Billable;
@@ -18,7 +19,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
+use Laravel\Jetstream\HasTeams;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
@@ -26,6 +29,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+
+    use HasProfilePhoto;
+    use HasTeams;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -96,6 +103,21 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function todaysAppointments(): HasMany
     {
         return $this->hasMany(Appointment::class)->where('status', 'created')->where('date', Carbon::today()->format('Y-m-d'));
+    }
+
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class);
+    }
+
+    public function getTenants(Panel $panel): Collection
+    {
+        return $this->teams;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->teams()->whereKey($tenant)->exists();
     }
 
 

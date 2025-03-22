@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Team;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -32,8 +33,6 @@ use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Filament\Enums\ThemeMode;
 use App\Filament\Admin\Themes\PetClinic;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use TomatoPHP\FilamentTenancy\FilamentTenancyAppPlugin;
 
 class DoctorPanelProvider extends PanelProvider
@@ -72,10 +71,10 @@ class DoctorPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            //->tenant(Clinic::class)
-            //->tenantMiddleware([
-            //    \Hasnayeen\Themes\Http\Middleware\SetTheme::class
-            //], isPersistent: true)
+            ->tenant(Team::class)
+            ->tenantMiddleware([
+               \Hasnayeen\Themes\Http\Middleware\SetTheme::class
+            ], isPersistent: true)
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\\Filament\\Doctor\\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\\Filament\\Doctor\\Pages')
             ->pages([
@@ -107,8 +106,8 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->databaseTransactions()
             ->unsavedChangesAlerts()
-            //->tenantBillingProvider(new BillingProvider('default'))
-            //->requiresTenantSubscription()
+            ->tenantBillingProvider(new BillingProvider('default'))
+            ->requiresTenantSubscription()
             ->theme(asset('css/filament/admin/theme.css'))
             //->viteTheme('resources/css/filament/admin/theme.css')
             ->plugins([
