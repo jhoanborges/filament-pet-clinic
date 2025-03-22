@@ -29,9 +29,7 @@ class AppointmentsKanbanBoard extends KanbanBoard
 
     protected function records(): Collection
     {
-        return Filament::getTenant()->appointments;
-
-        //return Appointment::all();
+        return Appointment::all();
     }
 /*
     protected function getEditModalFormSchema(null|int $recordId): array

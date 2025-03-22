@@ -34,12 +34,12 @@ class OrderResource extends Resource
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
     protected static ?string $navigationGroup = 'Inventory';
     protected static ?int $navigationSort = 1;
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->orders->count();
     }
-
+*/
 
     public static function form(Form $form): Form
     {
@@ -55,7 +55,7 @@ class OrderResource extends Resource
                             return 'ORD-1'; // If no records exist, start with 1
                         }
                     })
-                    ->helperText('This ID must be unique')  
+                    ->helperText('This ID must be unique')
                     ->label('Referencia')
                     ->required()
                     ->maxLength(255),
@@ -167,7 +167,7 @@ class OrderResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),
-      
+
             ])
             ->filters([
                 //

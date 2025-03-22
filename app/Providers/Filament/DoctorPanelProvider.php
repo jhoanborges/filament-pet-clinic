@@ -79,7 +79,7 @@ class DoctorPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->tenant(Clinic::class)
+            //->tenant(Clinic::class)
             ->tenantMiddleware([
                 ApplyTenantScopes::class,
                 \Hasnayeen\Themes\Http\Middleware\SetTheme::class
@@ -116,8 +116,8 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->databaseTransactions()
             ->unsavedChangesAlerts()
-            ->tenantBillingProvider(new BillingProvider('default'))
-            ->requiresTenantSubscription()
+            //->tenantBillingProvider(new BillingProvider('default'))
+            //->requiresTenantSubscription()
             ->theme(asset('css/filament/admin/theme.css'))
             //->viteTheme('resources/css/filament/admin/theme.css')
             ->plugins([

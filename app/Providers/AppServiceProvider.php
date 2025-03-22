@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         InventoryTransaction::observe(InventoryTransactionObserver::class);
         Model::unguard(true);
+        
         Cashier::useCustomerModel(Clinic::class);
         Cashier::useSubscriptionModel(Subscription::class);
         //Cashier::useSubscriptionItemModel(SubscriptionItem::class);

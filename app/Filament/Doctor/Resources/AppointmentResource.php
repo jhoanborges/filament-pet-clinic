@@ -31,12 +31,12 @@ class AppointmentResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?int $navigationSort = 1;
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->activeAppointments->count();
     }
-
+*/
 
     public static function form(Form $form): Form
     {
@@ -51,14 +51,10 @@ class AppointmentResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->helperText(fn () 
-                        => Filament::getTenant()->pets->isEmpty() ? new HtmlString(
-                            '<span class="text-sm text-danger-600 dark:text-danger-400">No pets available for this clinic.</span>'
-                        ) : '')
                     ->columnSpanFull(),
                     /*->getSearchResultsUsing(function (string $search) {
                         $pets = Pet::where('name', 'like', "%{$search}%")->limit(50)->get();
-                    
+
                         return $pets->mapWithKeys(function ($pet) {
                                 return [$pet->getKey() => AvatarOptions::getOptionString($pet)];
                         })->toArray();
@@ -77,35 +73,11 @@ class AppointmentResource extends Resource
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn (Set $set) => $set('slot_id', null)),
-                    
+
 
                     TimePickerField::make('start_time')->label('Start Time')->okLabel("Confirm")->cancelLabel("Cancel"),
                     TimePickerField::make('end_time')->label('End Time')->okLabel("Confirm")->cancelLabel("Cancel"),
-                /*
-                Forms\Components\Select::make('slot_id')
-                    ->native(false)
-                    //->required()
-                    ->label('Slot')
-                    ->options(function (Get $get) {
-                        $clinic = Filament::getTenant();
-                        $doctor = Filament::auth()->user();
-                        $dayOfTheWeek = Carbon::parse($get('date'))->dayOfWeek;
 
-                        return Slot::availableFor($doctor, $dayOfTheWeek, $clinic->id)->get()->pluck('formatted_time', 'id');
-                    })
-                    ->hidden(fn (Get $get) => blank($get('date')))
-                    ->live()
-                    ->helperText(function ($component) {
-                        if (! $component->getOptions()) {
-                            return new HtmlString(
-                                '<span class="text-sm text-danger-600 dark:text-danger-400">No slots available. Please select a different date</span>'
-                            );
-                        }
-
-                        return '';
-                    }),
-
-                    */
                 Forms\Components\TextInput::make('description')
                     ->required(),
                 Forms\Components\Select::make('status')

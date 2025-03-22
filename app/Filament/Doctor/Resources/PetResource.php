@@ -24,11 +24,11 @@ class PetResource extends Resource
     protected static ?int $navigationSort = 3;
 
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->pets->count();
-    }
+    }*/
 
 
     public static function getGloballySearchableAttributes(): array

@@ -63,4 +63,6 @@ class Appointment extends Model implements Sortable
     {
         return $this->morphMany(Note::class, 'notable');
     }
+
+    
 }

@@ -19,12 +19,12 @@ class ClientResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users'; // Icon for the sidebar
 
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->clients->count();
     }
-
+*/
     public static function getGloballySearchableAttributes(): array
     {
         return ['name', 'lastname', 'pet.name', 'phone'];

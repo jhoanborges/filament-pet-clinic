@@ -35,11 +35,11 @@ class ProductResource extends Resource
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
     protected static ?string $navigationGroup = 'Inventory';
     protected static ?int $navigationSort = 2;
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->products->count();
-    }
+    }*/
 
     public static function form(Form $form): Form
     {
@@ -71,7 +71,7 @@ class ProductResource extends Resource
                                 ->options(ProductCategory::all()->pluck('name', 'id'))
                                 ->searchable(),
                                 //->required(),
-                                
+
 
                             \Filament\Forms\Components\TextInput::make('price')
                                 ->suffix(config('money.defaults.currency'))
@@ -135,7 +135,7 @@ class ProductResource extends Resource
                     ->label('Stock')
                     ->sortable()
                     ->formatStateUsing(fn ($state) => $state),
-                    
+
                 Tables\Columns\TextColumn::make('category.name')
                     ->limit(50)
             ])
