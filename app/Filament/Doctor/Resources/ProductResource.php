@@ -101,7 +101,7 @@ class ProductResource extends Resource
                                 ->previewable()
                                 ->multiple()
                                 ->reorderable()
-                                ->disk('products')
+                                ->disk('r2')
                                 ->collection('products')
                                 ->maxFiles(100)
 

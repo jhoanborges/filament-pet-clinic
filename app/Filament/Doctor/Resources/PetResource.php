@@ -76,7 +76,7 @@ class PetResource extends Resource
                                     ->previewable()
                                     ->multiple()
                                     ->reorderable()
-                                    ->disk('pets')
+                                    ->disk('r2')
                                     ->collection('pets')
                                     ->maxFiles(100)
                             ]),
