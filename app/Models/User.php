@@ -4,23 +4,23 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Models\Contracts\HasAvatar;
-use Filament\Models\Contracts\HasTenants;
+use Carbon\Carbon;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Cashier\Billable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Cashier\Billable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable implements HasTenants, FilamentUser, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     use Billable;
     use HasApiTokens;
@@ -60,19 +60,9 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
         'password' => 'hashed',
     ];
 
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class);
-    }
-
     public function schedules(): HasMany
     {
         return $this->hasMany(Schedule::class, 'owner_id');
-    }
-
-    public function clinics(): BelongsToMany
-    {
-        return $this->belongsToMany(Clinic::class);
     }
 
     public function pets(): HasMany
@@ -80,26 +70,9 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
         return $this->hasMany(Pet::class, 'owner_id');
     }
 
-    public function getTenants(Panel $panel): array|Collection
-    {
-        return $this->clinics;
-    }
-
-    public function canAccessTenant(Model $tenant): bool
-    {
-        return $this->clinics->contains($tenant);
-    }
-
     public function canAccessPanel(Panel $panel): bool
     {
-        $role = auth()->user()->role->name;
-
-        return match ($panel->getId()) {
-            'admin' => $role === 'admin',
-            'doctor' => $role === 'doctor',
-            'owner' => $role === 'owner',
-            default => false
-        };
+        return true;
     }
 
     public function getFilamentAvatarUrl(): ?string
@@ -114,16 +87,16 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
         );
     }
 
-    public function owner(): BelongsTo
+
+    public function activeAppointments(): HasMany
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->hasMany(Appointment::class)->where('status', 'created');
     }
 
-    public function scopeOwner($query, $owner)
+    public function todaysAppointments(): HasMany
     {
-        return $query->where('owner_id', $owner->id);
+        return $this->hasMany(Appointment::class)->where('status', 'created')->where('date', Carbon::today()->format('Y-m-d'));
     }
 
-    
-    
+
 }

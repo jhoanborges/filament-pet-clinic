@@ -16,19 +16,10 @@ class Product extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $appends = ['stock'];
-    
+
     public function inventory()
     {
         return $this->hasOne(Inventory::class);  // A product has one inventory record
-    }
-    public function clinics(): BelongsTo
-    {
-        return $this->belongsTo(Clinic::class, 'clinic_id');
-    }
-    
-    public function clinic(): BelongsTo
-    {
-        return $this->belongsTo(Clinic::class, 'clinic_id');
     }
 
     public function category()
@@ -60,8 +51,8 @@ class Product extends Model implements HasMedia
             return $type === 'entry' ? $item->quantity : -$item->quantity;
         });
     }
-    
-    
+
+
 
     public function orders()
 {

@@ -26,14 +26,14 @@ class ProductCategoryResource extends Resource
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
     protected static ?string $navigationGroup = 'Inventory';
     protected static ?int $navigationSort = 3;
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->productCategories->count();
     }
+*/
 
 
-    
     public static function form(Form $form): Form
     {
         return $form->schema([

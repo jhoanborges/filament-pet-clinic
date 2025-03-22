@@ -34,19 +34,4 @@ class PetFactory extends Factory
         ];
     }
 
-    public function configure(): static
-    {
-        return $this->afterMaking(function (Pet $user) {
-            // ...
-        })->afterCreating(function (Pet $pet) {
-            DB::table('clinic_pet')->insert([
-                'clinic_id' => Clinic::inRandomOrder()->first()->id,
-                'pet_id' => $pet->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        });
-    }
-
-    
 }

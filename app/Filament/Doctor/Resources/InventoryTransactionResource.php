@@ -30,12 +30,12 @@ class InventoryTransactionResource extends Resource
     protected static ?string $navigationGroup = 'Inventory';
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
     protected static ?int $navigationSort = 4;
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->inventoryTransactions->count();
     }
-
+*/
 
 
     public static function form(Form $form): Form
@@ -84,7 +84,7 @@ class InventoryTransactionResource extends Resource
                                     ->send();
                             }
                         }),
-            
+
                         Select::make('product_id')
                         ->label('Product')
                         ->searchable()
@@ -106,7 +106,7 @@ class InventoryTransactionResource extends Resource
                             ->numeric()
                             ->required(),
                     ]),
-                
+
             ]);
     }
 

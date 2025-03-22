@@ -32,8 +32,7 @@ class ClientFactory extends Factory
             'postal_code' => $this->faker->optional()->numerify('#####'), // Nullable, 5-digit postal code
             'allow_email_notification' => $this->faker->boolean(50), // 50% chance of true
             'created_at' => $this->faker->dateTimeThisYear(),
-            'updated_at' => $this->faker->dateTimeThisYear(),
-            'clinic_id' => Clinic::inRandomOrder()->first()->id,
+            'updated_at' => $this->faker->dateTimeThisYear()
 
         ];
     }

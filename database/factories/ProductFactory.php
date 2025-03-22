@@ -27,8 +27,7 @@ class ProductFactory extends Factory
             'name'        => $faker->words(3, true),
             'price'       => $faker->randomFloat(2, 5, 500), // Precio entre 5 y 500
             'sku'         => strtoupper(Str::random(10)), // SKU aleatorio
-            'description' => $faker->sentence(),
-            'clinic_id'   => Clinic::inRandomOrder()->value('id') ?? null, // Asigna una clínica aleatoria si hay
+            'description' => $faker->sentence()
         ];
     }
 }

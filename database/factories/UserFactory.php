@@ -2,9 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Role;
-use App\Models\User;
-use App\Models\Clinic;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -44,31 +41,6 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
-    }
-
-    public function role($roleName): Factory
-    {
-        $role = Role::whereName($roleName)->first();
-
-        return $this->state(function (array $attributes) use ($role) {
-            return [
-                'role_id' => $role->id,
-            ];
-        });
-    }
-
-    public function configure(): static
-    {
-        return $this->afterMaking(function (User $user) {
-            // ...
-        })->afterCreating(function (User $user) {
-            DB::table('clinic_user')->insert([
-                'clinic_id' => Clinic::inRandomOrder()->first()->id,
-                'user_id' => $user->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        });
     }
 
 }

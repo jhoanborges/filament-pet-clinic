@@ -39,11 +39,6 @@ class UserResource extends Resource
                         ->preload()
                         ->relationship('role', 'name')
                         ->required(),
-                    Forms\Components\Select::make('clinic_id')
-                        ->relationship('clinics', 'name')
-                        ->multiple()
-                        ->preload()
-                        ->searchable(),
                     Forms\Components\TextInput::make('password')
                         ->password()
                         ->dehydrateStateUsing(fn ($state) => Hash::make($state))
@@ -121,8 +116,4 @@ class UserResource extends Resource
         ];
     }
 
-    public static function shouldRegisterNavigation(): bool
-    {
-        return auth()->user()->role->name == 'admin';
-    }
 }

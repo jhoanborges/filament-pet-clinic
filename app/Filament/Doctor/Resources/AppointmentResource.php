@@ -31,12 +31,12 @@ class AppointmentResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?int $navigationSort = 1;
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->activeAppointments->count();
     }
-
+*/
 
     public static function form(Form $form): Form
     {
@@ -51,14 +51,14 @@ class AppointmentResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->helperText(fn () 
+                    ->helperText(fn ()
                         => Filament::getTenant()->pets->isEmpty() ? new HtmlString(
                             '<span class="text-sm text-danger-600 dark:text-danger-400">No pets available for this clinic.</span>'
                         ) : '')
                     ->columnSpanFull(),
                     /*->getSearchResultsUsing(function (string $search) {
                         $pets = Pet::where('name', 'like', "%{$search}%")->limit(50)->get();
-                    
+
                         return $pets->mapWithKeys(function ($pet) {
                                 return [$pet->getKey() => AvatarOptions::getOptionString($pet)];
                         })->toArray();
@@ -77,7 +77,7 @@ class AppointmentResource extends Resource
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn (Set $set) => $set('slot_id', null)),
-                    
+
 
                     TimePickerField::make('start_time')->label('Start Time')->okLabel("Confirm")->cancelLabel("Cancel"),
                     TimePickerField::make('end_time')->label('End Time')->okLabel("Confirm")->cancelLabel("Cancel"),

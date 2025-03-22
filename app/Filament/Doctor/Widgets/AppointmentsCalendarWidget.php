@@ -19,6 +19,7 @@ use Filament\Forms\Components\DatePicker;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 use HusamTariq\FilamentTimePicker\Forms\Components\TimePickerField;
 use App\Filament\Doctor\Resources\AppointmentResource\Pages;
+use App\Models\Pet;
 use App\Models\User;
 use Saade\FilamentFullCalendar\Actions\CreateAction;
 use Saade\FilamentFullCalendar\Actions\EditAction;
@@ -54,7 +55,7 @@ class AppointmentsCalendarWidget extends FullCalendarWidget
 
                  return [
                      ...$data,
-                     'clinic_id' => $user->clinics->first()->id,
+                     'user_id' => $user->id,
                      'doctor_id' => $user->id
                  ];
              })
@@ -72,8 +73,8 @@ class AppointmentsCalendarWidget extends FullCalendarWidget
                 ->preload()
                 ->required()
                 ->helperText(fn()
-                => Filament::getTenant()->pets->isEmpty() ? new HtmlString(
-                    '<span class="text-sm text-danger-600 dark:text-danger-400">No pets available for this clinic.</span>'
+                => Pet::get()->isEmpty() ? new HtmlString(
+                    '<span class="text-sm text-danger-600 dark:text-danger-400">No pets available.</span>'
                 ) : '')
                 ->columnSpanFull(),
 
@@ -157,7 +158,7 @@ class AppointmentsCalendarWidget extends FullCalendarWidget
     {
         return <<<JS
         function({ event, timeText, isStart, isEnd, isMirror, isPast, isFuture, isToday, el, view }){
-      
+
             el.setAttribute("x-tooltip", "tooltip");
             el.setAttribute("x-data", "{ tooltip: '"+event?.extendedProps?.description+"' }");
         }

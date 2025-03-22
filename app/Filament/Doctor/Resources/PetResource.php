@@ -24,12 +24,12 @@ class PetResource extends Resource
     protected static ?int $navigationSort = 3;
 
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
-
+/*
     public static function getNavigationBadge(): ?string
     {
         return Filament::getTenant()->pets->count();
     }
-
+*/
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -48,9 +48,11 @@ class PetResource extends Resource
                             ->schema([
 
                                 Forms\Components\FileUpload::make('avatar')
-                                ->avatar()
-                                    ->image()
-                                    ->imageEditor(),
+                            ->disk('public')
+                                //->directory('pets')
+                                //->avatar()
+                                //->image()
+                                ->imageEditor(),
                                 Forms\Components\TextInput::make('name')
                                     ->required(),
                                 Forms\Components\DatePicker::make('date_of_birth')

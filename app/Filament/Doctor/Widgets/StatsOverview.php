@@ -22,10 +22,10 @@ class StatsOverview extends BaseWidget
             Stat::make('Orders Total', number_format($ordersTotal, 2, ',', '.') . ' ' . config('money.defaults.currency'))
                 //->description('32k increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
-            Stat::make('Appointments', Filament::getTenant()->activeAppointments->count())
+            Stat::make('Appointments', auth()->user()->activeAppointments->count())
                 //->description('7% decrease')
                 ->descriptionIcon('heroicon-m-arrow-trending-down'),
-            Stat::make("Today's Appointments", Filament::getTenant()->todaysAppointments->count())
+            Stat::make("Today's Appointments", auth()->user()->todaysAppointments->count() )
                 //->description('3% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
         ];

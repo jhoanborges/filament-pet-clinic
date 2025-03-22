@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             //'password' => bcrypt('12345678'),
         ]);
 */
-        User::factory()->role('admin')->create([
+        User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@hexagun.mx',
             'phone' => '5555551234',
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         ]);
 
 
-        User::factory()->role('doctor')->create([
+        User::factory()->create([
             'name' => 'Doctor',
             'email' => 'doctor@hexagun.mx',
             'phone' => '5555551234',
