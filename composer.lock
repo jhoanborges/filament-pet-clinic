@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc4bd63b0d0bdcc6a87ff9a0547b8734",
+    "content-hash": "1ceb73c0d7662e5ceb69b44bfbdfac4e",
     "packages": [
         {
             "name": "akaunting/laravel-money",
@@ -9671,6 +9671,72 @@
                 }
             ],
             "time": "2024-10-06T12:55:07+00:00"
+        },
+        {
+            "name": "tomatophp/filament-tenancy",
+            "version": "v1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tomatophp/filament-tenancy.git",
+                "reference": "adda44b45e5dbc9bc5a0e7f1ebc0f8257b199e0a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tomatophp/filament-tenancy/zipball/adda44b45e5dbc9bc5a0e7f1ebc0f8257b199e0a",
+                "reference": "adda44b45e5dbc9bc5a0e7f1ebc0f8257b199e0a",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "php": "^8.1|^8.2",
+                "stancl/tenancy": "^3.8",
+                "tomatophp/console-helpers": "^1.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TomatoPHP\\FilamentTenancy\\FilamentTenancyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TomatoPHP\\FilamentTenancy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fady Mondy",
+                    "email": "info@3x1.io"
+                }
+            ],
+            "description": "Tenancy multi-database integration for FilamentPHP",
+            "keywords": [
+                "filament-plugins",
+                "filamentphp",
+                "laravel",
+                "multi-database",
+                "multi-tenancy",
+                "php",
+                "tenancy",
+                "tomatophp"
+            ],
+            "support": {
+                "issues": "https://github.com/tomatophp/filament-tenancy/issues",
+                "source": "https://github.com/tomatophp/filament-tenancy/tree/v1.0.7"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/3x1io",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-11-11T14:47:31+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 use Stancl\Tenancy\Database\Models\Domain;
-use Stancl\Tenancy\Database\Models\Tenant;
 
 return [
-    'tenant_model' => \App\Models\Tenant::class,
+    'tenant_model' => \TomatoPHP\FilamentTenancy\Models\Tenant::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
     'domain_model' => Domain::class,
@@ -16,11 +15,7 @@ return [
      *
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
-    'central_domains' => [
-        '127.0.0.1',
-        'localhost',
-        'pet-clinic.test'
-    ],
+    'central_domains' => array_filter(array_merge([env('CENTRAL_DOMAIN','')], explode(',',env('CENTRAL_DOMAINS','')))),
 
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
@@ -30,8 +25,8 @@ return [
      */
     'bootstrappers' => [
         Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper::class,
-        Stancl\Tenancy\Bootstrappers\CacheTenancyBootstrapper::class,
-        //Stancl\Tenancy\Bootstrappers\FilesystemTenancyBootstrapper::class,
+//        Stancl\Tenancy\Bootstrappers\CacheTenancyBootstrapper::class,
+        Stancl\Tenancy\Bootstrappers\FilesystemTenancyBootstrapper::class,
         Stancl\Tenancy\Bootstrappers\QueueTenancyBootstrapper::class,
         // Stancl\Tenancy\Bootstrappers\RedisTenancyBootstrapper::class, // Note: phpredis is needed
     ],
@@ -52,8 +47,8 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'tenant',
-        'suffix' => '',
+        'prefix' => 'tomatophp_',
+        'suffix' => '_db',
 
         /**
          * TenantDatabaseManagers are classes that handle the creation & deletion of tenant databases.
@@ -63,16 +58,16 @@ return [
             'mysql' => Stancl\Tenancy\TenantDatabaseManagers\MySQLDatabaseManager::class,
             'pgsql' => Stancl\Tenancy\TenantDatabaseManagers\PostgreSQLDatabaseManager::class,
 
-        /**
-         * Use this database manager for MySQL to have a DB user created for each tenant database.
-         * You can customize the grants given to these users by changing the $grants property.
-         */
+            /**
+             * Use this database manager for MySQL to have a DB user created for each tenant database.
+             * You can customize the grants given to these users by changing the $grants property.
+             */
             // 'mysql' => Stancl\Tenancy\TenantDatabaseManagers\PermissionControlledMySQLDatabaseManager::class,
 
-        /**
-         * Disable the pgsql manager above, and enable the one below if you
-         * want to separate tenant DBs by schemas rather than databases.
-         */
+            /**
+             * Disable the pgsql manager above, and enable the one below if you
+             * want to separate tenant DBs by schemas rather than databases.
+             */
             // 'pgsql' => Stancl\Tenancy\TenantDatabaseManagers\PostgreSQLSchemaManager::class, // Separate by schema instead of database
         ],
     ],
@@ -113,7 +108,7 @@ return [
          * See https://tenancyforlaravel.com/docs/v3/tenancy-bootstrappers/#filesystem-tenancy-boostrapper
          */
         'root_override' => [
-            // Disks whose roots should be overridden after storage_path() is suffixed.
+            // Disks whose roots should be overriden after storage_path() is suffixed.
             'local' => '%storage_path%/app/',
             'public' => '%storage_path%/app/public/',
         ],
@@ -127,7 +122,7 @@ return [
          * edge cases, it can cause issues (like using Passport with Vapor - see #196), so
          * you may want to disable this if you are experiencing these edge case issues.
          */
-        'suffix_storage_path' => true,
+        'suffix_storage_path' => false,
 
         /**
          * By default, asset() calls are made multi-tenant too. You can use global_asset() and mix()
@@ -151,7 +146,7 @@ return [
     'redis' => [
         'prefix_base' => 'tenant', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
         'prefixed_connections' => [ // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
-            // 'default',
+            'default',
         ],
     ],
 
@@ -164,12 +159,12 @@ return [
      * understand which ones you want to enable.
      */
     'features' => [
-        // Stancl\Tenancy\Features\UserImpersonation::class,
+        Stancl\Tenancy\Features\UserImpersonation::class,
         // Stancl\Tenancy\Features\TelescopeTags::class,
-         Stancl\Tenancy\Features\UniversalRoutes::class,
-         Stancl\Tenancy\Features\TenantConfig::class, // https://tenancyforlaravel.com/docs/v3/features/tenant-config
-         Stancl\Tenancy\Features\CrossDomainRedirect::class, // https://tenancyforlaravel.com/docs/v3/features/cross-domain-redirect
-         Stancl\Tenancy\Features\ViteBundler::class,
+        Stancl\Tenancy\Features\UniversalRoutes::class,
+        // Stancl\Tenancy\Features\TenantConfig::class, // https://tenancyforlaravel.com/docs/v3/features/tenant-config
+        Stancl\Tenancy\Features\CrossDomainRedirect::class, // https://tenancyforlaravel.com/docs/v3/features/cross-domain-redirect
+        Stancl\Tenancy\Features\ViteBundler::class,
     ],
 
     /**
@@ -186,7 +181,10 @@ return [
      */
     'migration_parameters' => [
         '--force' => true, // This needs to be true to run migrations in production.
-        '--path' => [database_path('migrations/tenant')],
+        '--path' => [
+            database_path('migrations/tenant'),
+            base_path('/vendor/tomatophp/tomato-tenancy/database/migrations'),
+        ],
         '--realpath' => true,
     ],
 
@@ -194,7 +192,7 @@ return [
      * Parameters used by the tenants:seed command.
      */
     'seeder_parameters' => [
-        '--class' => 'DatabaseSeeder', // root seeder class
-        // '--force' => true, // This needs to be true to seed tenant databases in production
+        // '--class' => '', // your seeder here
+        // '--force' => true,
     ],
 ];

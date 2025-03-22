@@ -20,6 +20,7 @@ use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Filament\Enums\ThemeMode;
 use Filament\Support\Enums\MaxWidth;
+use TomatoPHP\FilamentTenancy\FilamentTenancyPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -75,14 +76,12 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class
             ])
-            ->middleware([
-                'universal'
-            ], isPersistent: true)
             ->authMiddleware([
                 Authenticate::class,
             ])
             ->plugins([
-                FilamentApexChartsPlugin::make()
+                FilamentApexChartsPlugin::make(),
+                FilamentTenancyPlugin::make()->panel('doctor')
             ]);
     }
 }

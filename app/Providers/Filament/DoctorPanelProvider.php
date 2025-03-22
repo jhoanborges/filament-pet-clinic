@@ -34,6 +34,7 @@ use Filament\Enums\ThemeMode;
 use App\Filament\Admin\Themes\PetClinic;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use TomatoPHP\FilamentTenancy\FilamentTenancyAppPlugin;
 
 class DoctorPanelProvider extends PanelProvider
 {
@@ -101,11 +102,6 @@ class DoctorPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class
             ])
-            ->middleware([
-                'universal',
-                InitializeTenancyByDomain::class,
-                PreventAccessFromCentralDomains::class
-            ], isPersistent: true)
             ->authMiddleware([
                 Authenticate::class,
             ])
@@ -116,6 +112,7 @@ class DoctorPanelProvider extends PanelProvider
             ->theme(asset('css/filament/admin/theme.css'))
             //->viteTheme('resources/css/filament/admin/theme.css')
             ->plugins([
+                FilamentTenancyAppPlugin::make(),
                 FilamentFullCalendarPlugin::make()
                     ->selectable()
                     ->editable(true)
