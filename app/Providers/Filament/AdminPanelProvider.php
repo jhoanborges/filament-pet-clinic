@@ -17,6 +17,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
+use Filament\Enums\ThemeMode;
+use Filament\Support\Enums\MaxWidth;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,6 +33,27 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->passwordReset()
+            ->brandLogo(asset('images/logo.svg'))
+            ->darkModeBrandLogo(asset('images/logo-white.svg'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('favicon/favicon.ico'))
+            ->colors([
+                'danger' => Color::Rose,
+                'gray' => Color::Gray,
+                'info' => Color::Blue,
+                'primary' => '#9056a3',
+                'secondary' => '#c978b2',
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
+                'pink' => Color::hex('#c978b2'),
+                'purple' => Color::hex('#9056a3'),
+                'dark-blue' => Color::hex('#3a419a'),
+                'light-blue' => Color::hex('#e3f3f7'),
+                'dark-gray' => Color::hex('#333'),
+            ])
+            ->defaultThemeMode(ThemeMode::Light)
+            ->font('Poppins')
+            ->maxContentWidth(MaxWidth::Full)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -55,10 +79,11 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->plugin(
+            ->plugins([
                 \Hasnayeen\Themes\ThemesPlugin::make(),
-                \TomatoPHP\FilamentLogger\FilamentLoggerPlugin::make()
-        );
+                \TomatoPHP\FilamentLogger\FilamentLoggerPlugin::make(),
+                FilamentApexChartsPlugin::make()
+        ]);
     
     }
 }
