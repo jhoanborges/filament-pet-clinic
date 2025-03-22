@@ -33,7 +33,7 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
      * @var array<int, string>
      */
     protected $fillable = [
-        'avatar_url',
+        'avatar',
         'name',
         'email',
         'password',
@@ -104,13 +104,13 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return "/storage/$this->avatar_url";
+        return "/storage/$this->avatar";
     }
 
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['avatar_url']
+            get: fn ($value, $attributes) => $attributes['avatar']
         );
     }
 

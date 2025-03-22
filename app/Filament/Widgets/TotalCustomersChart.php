@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\Client;
 use Flowframe\Trend\Trend;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
+use App\Helpers\ThemeHelper;
 
 class TotalCustomersChart extends ApexChartWidget
 {
@@ -65,13 +66,13 @@ class TotalCustomersChart extends ApexChartWidget
                     ],
                 ],
             ],
-            'colors' => ['#f59e0b'],
+            'colors' => [ThemeHelper::getPrimaryColor()],
             'stroke' => [
                 'curve' => 'smooth',
             ],
             'markers' => [
             'size' => 6, // Size of the markers
-            'colors' => ['#f59e0b'], // Color of the markers
+            'colors' => [ThemeHelper::getSecondaryColor()],
             'strokeColors' => ['#fff'], // Border color of the markers
             'strokeWidth' => 2, // Border width of the markers
             'hover' => [

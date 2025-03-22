@@ -26,15 +26,47 @@ class AppointmentFactory extends Factory
         $startTime = $this->faker->dateTimeBetween('now', '+1 month'); // Random future date within 1 month
         $endTime = Carbon::instance($startTime)->addMinutes($this->faker->numberBetween(15, 60)); // End time 15-60 mins later
 
+        // Get or create a doctor
         $doctor = User::whereHas('role', function ($query) {
             $query->where('name', 'doctor');
         })->inRandomOrder()->first();
 
+        if (!$doctor) {
+            $doctor = User::factory()->create([
+                'role_id' => \App\Models\Role::where('name', 'doctor')->first()->id
+            ]);
+        }
+
+        // Get or create a client
+        $client = User::whereHas('role', function ($query) {
+            $query->where('name', 'owner');
+        })->inRandomOrder()->first();
+
+        if (!$client) {
+            $client = User::factory()->create([
+                'role_id' => \App\Models\Role::where('name', 'owner')->first()->id
+            ]);
+        }
+
+        // Get or create a pet for the client
+        $pet = Pet::where('client_id', $client->id)->inRandomOrder()->first();
+        if (!$pet) {
+            $pet = Pet::factory()->create([
+                'client_id' => $client->id
+            ]);
+        }
+
+        // Get or create a clinic
+        $clinic = Clinic::inRandomOrder()->first();
+        if (!$clinic) {
+            $clinic = Clinic::factory()->create();
+        }
+
         return [
             'description' => $this->faker->sentence(), // e.g., "Routine checkup for pet"
-            'pet_id' => Pet::inRandomOrder()->first()->id, // Creates or references a Pet
+            'pet_id' => $pet->id,
             'start_time' => $startTime,
-            'clinic_id' => Clinic::inRandomOrder()->first()->id,
+            'clinic_id' => $clinic->id,
             'doctor_id' => $doctor->id,
             'date' => Carbon::now()->addDays($this->faker->numberBetween(1, 30)),
             'end_time' => $endTime,

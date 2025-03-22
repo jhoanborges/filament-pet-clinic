@@ -42,6 +42,7 @@ class AppointmentResource extends Resource
                 Forms\Components\Select::make('pet_id')
                     ->label('Pet')
                     ->allowHtml()
+                    ->preload()
                     ->searchable()
                     ->required()
                     ->columnSpanFull()

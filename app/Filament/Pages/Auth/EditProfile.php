@@ -12,7 +12,7 @@ class EditProfile extends BaseEditProfile
     {
         return $form
             ->schema([
-                Forms\Components\FileUpload::make('avatar_url')
+                Forms\Components\FileUpload::make('avatar')
                     ->image(),
                 $this->getNameFormComponent(),
                 $this->getEmailFormComponent(),

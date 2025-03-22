@@ -21,6 +21,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = \Faker\Factory::create();
+        $faker->addProvider(new \Smknstd\FakerPicsumImages\FakerPicsumImagesProvider($faker));
+
         return [
             'username' => fake()->name(),
             'name' => fake()->name(),
@@ -28,6 +31,7 @@ class UserFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'email_verified_at' => now(),
             'password' => bcrypt('password'), // password
+            'avatar' => $faker->imageUrl(400, 400),
             'remember_token' => Str::random(10),
         ];
     }

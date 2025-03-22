@@ -24,7 +24,7 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make([
-                    Forms\Components\FileUpload::make('avatar_url')
+                    Forms\Components\FileUpload::make('avatar')
                         ->image(),
                     Forms\Components\TextInput::make('name')
                         ->required(),
@@ -57,7 +57,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('avatar_url')
+                Tables\Columns\ImageColumn::make('avatar')
                     ->label('Avatar')
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Flowframe\Trend\Trend;
 use App\Models\Appointment;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
+use App\Helpers\ThemeHelper;
 
 class AppointmentsChart extends ApexChartWidget
 {
@@ -73,7 +74,7 @@ class AppointmentsChart extends ApexChartWidget
                     ],
                 ],
             ],
-            'colors' => ['#f59e0b'],
+            'colors' => [ThemeHelper::getPrimaryColor()],
             'stroke' => [
                 'curve' => 'smooth',
             ],

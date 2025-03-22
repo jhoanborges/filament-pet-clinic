@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use Carbon\Carbon;
 use Flowframe\Trend\Trend;
 use App\Models\OrderProduct;
+use App\Helpers\ThemeHelper;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class OrderMoneyChart extends ApexChartWidget
@@ -31,14 +32,14 @@ class OrderMoneyChart extends ApexChartWidget
      */
     protected function getOptions(): array
     {
-
+  
         $data = OrderProduct::whereYear('created_at', now()->year)
         ->get()
         ->groupBy(function ($order) {
-            return Carbon::parse($order->created_at)->month; // Use created_at instead of date
+            return Carbon::parse($order->created_at)->month;
         })
         ->map(function ($group) {
-            return $group->sum('price'); // Sum the price for each month
+            return $group->sum('price');
         })
         ->toArray();
     
@@ -75,7 +76,7 @@ class OrderMoneyChart extends ApexChartWidget
                     ],
                 ],
             ],
-            'colors' => ['#f59e0b'],
+            'colors' => [ThemeHelper::getPrimaryColor()],
             'plotOptions' => [
                 'bar' => [
                     'borderRadius' => 3,
