@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
 
-        /*
+
         $middleware->alias([
             'subdomain' => \App\Http\Middleware\SubdomainMiddleware::class,
         ]);
@@ -29,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\SubdomainMiddleware::class,
         ]);
-        */
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
