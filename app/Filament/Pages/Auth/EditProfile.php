@@ -13,8 +13,8 @@ class EditProfile extends BaseEditProfile
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('avatar')
-                ->disk('s3')
-                    ->image(),
+                ->disk('r2')
+                ->image(),
                 $this->getNameFormComponent(),
                 $this->getEmailFormComponent(),
                 Forms\Components\TextInput::make('phone')
