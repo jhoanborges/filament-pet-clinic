@@ -11,7 +11,7 @@ return [
             'price_id' => env('CASHIER_STRIPE_SUBSCRIPTION_DEFAULT_PRICE_ID'),
             'type' => 'default', // Optional, by default it uses the array key as type.
             'trial_days' => 0, // Optional
-            'has_generic_trial' => true, // Optional, only `trial_days` OR `has_generic_trial` can be used.
+            'has_generic_trial' => false, // Optional, only `trial_days` OR `has_generic_trial` can be used.
             'allow_promotion_codes' => true, // Optional
             'collect_tax_ids' => false, // Optional
             'metered_price' => false, // Optional

@@ -13,6 +13,7 @@ use Filament\Support\Enums\MaxWidth;
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Widgets\OrderMoneyChart;
 use App\Http\Middleware\ApplyTenantScopes;
+use App\Http\Middleware\Subscribed;
 use Filament\Http\Middleware\Authenticate;
 use App\Filament\Widgets\AppointmentsChart;
 use App\Http\Middleware\AssignGlobalScopes;
@@ -81,7 +82,6 @@ class DoctorPanelProvider extends PanelProvider
             ])
             //->tenant(Clinic::class)
             ->tenantMiddleware([
-                ApplyTenantScopes::class,
                 \Hasnayeen\Themes\Http\Middleware\SetTheme::class
             ], isPersistent: true)
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\\Filament\\Doctor\\Resources')
@@ -109,10 +109,10 @@ class DoctorPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                AssignGlobalScopes::class
-            ])
-            ->authMiddleware([
-                Authenticate::class,
+                ])
+                ->authMiddleware([
+                    Authenticate::class,
+                    Subscribed::class
             ])
             ->databaseTransactions()
             ->unsavedChangesAlerts()
