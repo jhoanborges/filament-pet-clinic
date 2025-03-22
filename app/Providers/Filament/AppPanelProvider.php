@@ -9,8 +9,6 @@ use Filament\PanelProvider;
 use Filament\Enums\ThemeMode;
 use Filament\Pages\Dashboard;
 use Filament\Support\Colors\Color;
-use Hasnayeen\Themes\ThemesPlugin;
-use Filament\Widgets\AccountWidget;
 use Filament\Support\Enums\MaxWidth;
 use App\Filament\Admin\Themes\PetClinic;
 use App\Filament\Widgets\OrderMoneyChart;
@@ -96,20 +94,20 @@ class AppPanelProvider extends PanelProvider
             ->theme(asset('css/filament/admin/theme.css'))
             //->tenant(Team::class)
             ->tenantMiddleware([
-               \Hasnayeen\Themes\Http\Middleware\SetTheme::class
+                \Hasnayeen\Themes\Http\Middleware\SetTheme::class
             ], isPersistent: true)
             ->plugins([
                 FilamentTenancyAppPlugin::make(),
                 FilamentFullCalendarPlugin::make()
-                ->selectable()
-                ->editable(true)
-                ->locale('es')
-                ->timezone(config('app.timezone'))
-                ->plugins(['dayGrid', 'timeGrid'])
-                ->config([]),
+                    ->selectable()
+                    ->editable(true)
+                    ->locale('es')
+                    ->timezone(config('app.timezone'))
+                    ->plugins(['dayGrid', 'timeGrid'])
+                    ->config([]),
                 \Hasnayeen\Themes\ThemesPlugin::make()
-                ->registerTheme([PetClinic::getName() => PetClinic::class]),
-            FilamentApexChartsPlugin::make()
+                    ->registerTheme([PetClinic::getName() => PetClinic::class]),
+                FilamentApexChartsPlugin::make()
             ])
             ->authMiddleware([
                 Authenticate::class,

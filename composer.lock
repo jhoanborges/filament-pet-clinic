@@ -2722,21 +2722,20 @@
         },
         {
             "name": "hasnayeen/themes",
-            "version": "v3.0.23",
+            "version": "v3.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Hasnayeen/themes.git",
-                "reference": "6f5cc1719719591d31c30e6f971fe5cede7aa000"
+                "reference": "4ee2899fc8e9d565cb4daad6bf84ff9b36fe29ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Hasnayeen/themes/zipball/6f5cc1719719591d31c30e6f971fe5cede7aa000",
-                "reference": "6f5cc1719719591d31c30e6f971fe5cede7aa000",
+                "url": "https://api.github.com/repos/Hasnayeen/themes/zipball/4ee2899fc8e9d565cb4daad6bf84ff9b36fe29ae",
+                "reference": "4ee2899fc8e9d565cb4daad6bf84ff9b36fe29ae",
                 "shasum": ""
             },
             "require": {
                 "filament/filament": "^3.0",
-                "illuminate/contracts": "^10.0|^11.0",
                 "php": "^8.1",
                 "spatie/laravel-package-tools": "^1.15.0"
             },
@@ -2794,7 +2793,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-10T06:31:54+00:00"
+            "time": "2025-02-27T05:00:18+00:00"
         },
         {
             "name": "husam-tariq/filament-timepicker",
