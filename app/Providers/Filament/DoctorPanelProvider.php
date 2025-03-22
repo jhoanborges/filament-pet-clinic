@@ -32,6 +32,8 @@ use App\Filament\Doctor\Widgets\AppointmentsCalendarWidget;
 use App\Filament\Widgets\TotalCustomersChart;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Filament\Enums\ThemeMode;
+use App\Filament\Admin\Themes\PetClinic;
 
 class DoctorPanelProvider extends PanelProvider
 {
@@ -43,8 +45,28 @@ class DoctorPanelProvider extends PanelProvider
         $tenant = $this->getTenantId(url()->current());
 
         return $panel
+        ->brandLogo(asset('images/logo.svg'))
+        ->darkModeBrandLogo(asset('images/logo-white.svg'))
+        ->brandLogoHeight('2rem')
+        ->favicon(asset('favicon/favicon.ico'))
+        ->colors([
+            'danger' => Color::Rose,
+            'gray' => Color::Gray,
+            'info' => Color::Blue,
+            'primary' => '#9056a3',
+            'secondary' => '#c978b2',
+            'success' => Color::Emerald,
+            'warning' => Color::Orange,
+            'pink' => Color::hex('#c978b2'),
+            'purple' => Color::hex('#9056a3'),
+            'dark-blue' => Color::hex('#3a419a'),
+            'light-blue' => Color::hex('#e3f3f7'),
+            'dark-gray' => Color::hex('#333'),
+        ])
+        ->defaultThemeMode(ThemeMode::Light)
             ->id('doctor')
             ->path('doctor')
+            ->font('Poppins')
             ->maxContentWidth(MaxWidth::Full)
             //->simplePageMaxContentWidth(MaxWidth::Full)
             ->spa()
@@ -95,7 +117,7 @@ class DoctorPanelProvider extends PanelProvider
             ->databaseTransactions()
             ->unsavedChangesAlerts()
             ->tenantBillingProvider(new BillingProvider('default'))
-            ->requiresTenantSubscription()
+           // ->requiresTenantSubscription()
             ->theme(asset('css/filament/admin/theme.css'))
             //->viteTheme('resources/css/filament/admin/theme.css')
             ->plugins([
@@ -106,7 +128,8 @@ class DoctorPanelProvider extends PanelProvider
                     ->timezone(config('app.timezone'))
                     ->plugins(['dayGrid', 'timeGrid'])
                     ->config([]),
-                \Hasnayeen\Themes\ThemesPlugin::make(),
+                \Hasnayeen\Themes\ThemesPlugin::make()
+                ->registerTheme([PetClinic::getName() => PetClinic::class]),
                 FilamentApexChartsPlugin::make()
                 //->schedulerLicenseKey()
             ]);

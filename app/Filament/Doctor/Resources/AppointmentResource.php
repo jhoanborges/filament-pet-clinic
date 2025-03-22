@@ -193,8 +193,4 @@ class AppointmentResource extends Resource
     }
     */
 
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'warning';
-    }
 }

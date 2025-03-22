@@ -30,7 +30,7 @@ return [
     */
 
     'default' => [
-        'theme' => 'default',
+        'theme' => 'pet-clinic',
         'theme_color' => 'blue',
     ],
 ];
