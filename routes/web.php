@@ -25,7 +25,8 @@ Route::get('/subscription-checkout', function (Request $request) {
     return $request->user()
         ->newSubscription('default', env('CASHIER_STRIPE_SUBSCRIPTION_DEFAULT_PRICE_ID'))
         //->createAndSendInvoice()
-        ->trialDays(0)
+        //->trialDays(1)
+        ->skipTrial() 
         ->allowPromotionCodes()
         ->checkout([
             'success_url' => route('filament.doctor.pages.dashboard'),
