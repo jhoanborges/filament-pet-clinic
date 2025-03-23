@@ -4,21 +4,22 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Models\Contracts\HasAvatar;
-use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Cashier\Billable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\HasTenants;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Cashier\Billable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements HasTenants, FilamentUser, HasAvatar
 {
@@ -102,16 +103,11 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
         };
     }
 
-    public function getFilamentAvatarUrl(): ?string
+    public function getFilamentAvatarUrl(): string
     {
-        return "/storage/$this->avatar";
-    }
-
-    public function avatar(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['avatar']
-        );
+        return $this->avatar
+            ? Storage::disk('r2')->url($this->avatar)
+            : asset('images/no-image.png');
     }
 
     public function owner(): BelongsTo
@@ -124,6 +120,6 @@ class User extends Authenticatable implements HasTenants, FilamentUser, HasAvata
         return $query->where('owner_id', $owner->id);
     }
 
-    
-    
+
+
 }

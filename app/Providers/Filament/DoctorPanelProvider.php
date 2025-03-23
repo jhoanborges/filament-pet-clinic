@@ -40,11 +40,6 @@ class DoctorPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        //$tenant = Filament::getTenant();
-        //$user = Filament::auth()->user();
-
-        $tenant = $this->getTenantId(url()->current());
-
         return $panel
         ->brandLogo(asset('images/logo.svg'))
         ->darkModeBrandLogo(asset('images/logo-white.svg'))
@@ -71,9 +66,6 @@ class DoctorPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             //->simplePageMaxContentWidth(MaxWidth::Full)
             ->spa()
-            ->spaUrlExceptions(fn(): array => [
-                '*/doctor/' . $tenant . '/doctor-calendar'
-            ])
             ->login()
             ->profile(EditProfile::class)
             ->passwordReset()
@@ -133,19 +125,6 @@ class DoctorPanelProvider extends PanelProvider
                 FilamentApexChartsPlugin::make()
                 //->schedulerLicenseKey()
             ]);
-    }
-
-    function getTenantId($url)
-    {
-        // Get the path from the URL (e.g., "/doctor/2/doctor-calendar")
-        $path = parse_url($url, PHP_URL_PATH);
-
-        // Use regex to match "/doctor/<number>/doctor-calendar" and capture the number
-        if (preg_match('/\/doctor\/(\d+)\/doctor-calendar/', $path, $matches)) {
-            return $matches[1]; // The tenant ID is captured in the first group
-        }
-
-        return null; // Return null if the pattern isn't found
     }
 
 }

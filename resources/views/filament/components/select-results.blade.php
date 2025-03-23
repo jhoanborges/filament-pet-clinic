@@ -5,7 +5,7 @@
                 <img src="{{ url('/storage/' . $record->avatar) }}" alt="{{ $record->name }}" role="img" class="h-full w-full rounded-full overflow-hidden shadow object-cover" />
             </div>
         </div>
- 
+
         <div class="flex flex-col justify-center pl-3 py-2">
             <p class="text-sm font-bold pb-1">{{ $record->name }}</p>
         </div>
