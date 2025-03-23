@@ -71,10 +71,6 @@ class AppointmentsCalendarWidget extends FullCalendarWidget
                 ->searchable()
                 ->preload()
                 ->required()
-                ->helperText(fn()
-                => Filament::getTenant()->pets->isEmpty() ? new HtmlString(
-                    '<span class="text-sm text-danger-600 dark:text-danger-400">No pets available for this clinic.</span>'
-                ) : '')
                 ->columnSpanFull(),
 
             DatePicker::make('date')
@@ -88,8 +84,7 @@ class AppointmentsCalendarWidget extends FullCalendarWidget
                     TimePickerField::make('start_time')->label('Start Time')->okLabel("Confirm")->cancelLabel("Cancel"),
                     TimePickerField::make('end_time')->label('End Time')->okLabel("Confirm")->cancelLabel("Cancel"),
                 ]),
-            TextInput::make('description')
-                ->required(),
+            TextInput::make('description'),
             Select::make('status')
                 ->native(false)
                 ->options(AppointmentStatus::class)
