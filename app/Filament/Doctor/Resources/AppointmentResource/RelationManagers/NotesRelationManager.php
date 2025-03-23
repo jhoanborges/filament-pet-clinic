@@ -2,15 +2,16 @@
 
 namespace App\Filament\Doctor\Resources\AppointmentResource\RelationManagers;
 
-use App\Models\Appointment;
-use App\Models\Note;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
+use App\Models\Note;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\Appointment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class NotesRelationManager extends RelationManager
 {
@@ -23,6 +24,19 @@ class NotesRelationManager extends RelationManager
                 Forms\Components\RichEditor::make('body')
                     ->required()
                     ->columnSpanFull(),
+                SpatieMediaLibraryFileUpload::make('media')
+                    ->openable()
+                    ->panelLayout('grid')
+                    ->downloadable()
+                    ->preserveFilenames()
+                    ->previewable()
+                    ->multiple()
+                    ->reorderable()
+                    ->disk('r2')
+                    ->collection('appointments')
+                    ->maxFiles(100)
+                    ->columnSpanFull(),
+
             ]);
     }
 
@@ -35,7 +49,7 @@ class NotesRelationManager extends RelationManager
                     // ->formatStateUsing(fn ($state) => strip_tags($state))
                     ->html()
                     ->limit(255)
-                    ->description(fn (Note $note) => $note->created_at->format('M d, Y'))
+                    ->description(fn(Note $note) => $note->created_at->format('M d, Y'))
             ])
             ->filters([
                 //
