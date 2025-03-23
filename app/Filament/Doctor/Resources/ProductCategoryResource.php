@@ -34,45 +34,48 @@ class ProductCategoryResource extends Resource
 */
 
 
-    public static function form(Form $form): Form
-    {
-        return $form->schema([
-            TextInput::make('name')
+public static function form(Form $form): Form
+{
+    return $form->schema([
+        TextInput::make('name')
+            ->label(__('Name'))
             ->columnSpanFull()
-                ->required()
-                ->maxLength(255),
-
-            RichEditor::make('description')
+            ->required()
+            ->maxLength(255),
+        RichEditor::make('description')
+            ->label(__('Description'))
             ->columnSpanFull()
+            ->nullable()
+            ->maxLength(500),
+    ]);
+}
 
-                ->nullable()
-                ->maxLength(500),
-        ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('name')
+public static function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            TextColumn::make('name')
+                ->label(__('Name'))
                 ->sortable()
                 ->searchable(),
-
             TextColumn::make('description')
+                ->label(__('Description'))
                 ->limit(50)
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
+        ])
+        ->filters([
+            //
+        ])
+        ->actions([
+            Tables\Actions\EditAction::make()
+                ->label(__('Edit')),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make()
+                    ->label(__('Delete')),
+            ]),
+        ]);
+}
 
     public static function getRelations(): array
     {

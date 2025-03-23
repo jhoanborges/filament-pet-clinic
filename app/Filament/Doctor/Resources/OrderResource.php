@@ -41,156 +41,137 @@ class OrderResource extends Resource
     }
 */
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                TextInput::make('reference')
-                    ->unique(Order::class, 'reference', ignoreRecord: true)
-                    ->default(function () {
-                        $lastOrder = Order::orderBy('id', 'desc')->first();
-                        if ($lastOrder) {
-                            return 'ORD-'.$lastOrder->id + 1;
-                        } else {
-                            return 'ORD-1'; // If no records exist, start with 1
-                        }
-                    })
-                    ->helperText('This ID must be unique')
-                    ->label('Referencia')
-                    ->required()
-                    ->maxLength(255),
-/*
-                TextInput::make('currency')
-                    ->label('Moneda')
-                    ->default('MXN')
-                    ->required(),
-*/
-                Repeater::make('orderProducts')
-                    ->relationship()
-                    ->columnSpanFull()
-                    ->schema([
+public static function form(Form $form): Form
+{
+    return $form
+        ->schema([
+            TextInput::make('reference')
+                ->unique(Order::class, 'reference', ignoreRecord: true)
+                ->default(function () {
+                    $lastOrder = Order::orderBy('id', 'desc')->first();
+                    if ($lastOrder) {
+                        return 'ORD-'.$lastOrder->id + 1;
+                    } else {
+                        return 'ORD-1';
+                    }
+                })
+                ->helperText(__('This ID must be unique'))
+                ->label(__('Reference'))
+                ->required()
+                ->maxLength(255),
+            Repeater::make('orderProducts')
+                ->relationship()
+                ->columnSpanFull()
+                ->schema([
+                    TextInput::make('sku')
+                        ->label(__('SKU'))
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (Set $set, $state) {
+                            $record = \App\Models\Product::where('sku', $state)->first();
+                            if ($record) {
+                                $set('product_id', $record->id);
+                                $set('quantity', 1);
+                                $set('quantity_available', $record->stock);
+                                $set('price', $record->price);
+                            } else {
+                                Notification::make()
+                                    ->color('warning')
+                                    ->warning()
+                                    ->title(__('Product error!'))
+                                    ->body(__('The selected product does not exist.'))
+                                    ->persistent(false)
+                                    ->duration(10000)
+                                    ->icon('heroicon-o-x-circle')
+                                    ->actions([
+                                        Action::make(__('View Products'))
+                                            ->button()
+                                            ->url(route('filament.doctor.resources.products.index', ['tenant' => Filament::getTenant()->id]), shouldOpenInNewTab: true),
+                                    ])
+                                    ->send();
+                            }
+                        }),
+                    Select::make('product_id')
+                        ->label(__('Product'))
+                        ->searchable()
+                        ->preload()
+                        ->native(false)
+                        ->relationship('product', 'name')
+                        ->required()
+                        ->live()
+                        ->afterStateUpdated(function (Set $set, $state) {
+                            $record = \App\Models\Product::where('id', $state)->first();
+                            if ($record) {
+                                $set('quantity_available', $record->stock);
+                                $set('sku', $record->sku);
+                                $set('price', $record->price);
+                            }
+                        }),
+                    TextInput::make('quantity_available')
+                        ->label(__('Quantity Available'))
+                        ->numeric()
+                        ->live()
+                        ->disabled()
+                        ->afterStateHydrated(function (TextInput $component, $state, Set $set, $record) {
+                            if ($record && $record->product) {
+                                $set('quantity_available', $record->product->stock);
+                            }
+                        }),
+                    \Filament\Forms\Components\TextInput::make('quantity')
+                        ->label(__('Quantity'))
+                        ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 0)
+                        ->required(),
+                    \Filament\Forms\Components\TextInput::make('price')
+                        ->suffix(config('money.defaults.currency'))
+                        ->label(__('Price'))
+                        ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
+                        ->required(),
+                ])->columns(5),
+            RichEditor::make('notes')
+                ->columnSpanFull()
+                ->label(__('Notes'))
+                ->nullable(),
+        ]);
+}
 
 
-                        TextInput::make('sku')
-                            ->label('SKU')
-                            ->live(onBlur: true)
-                            //->icon('heroicon-o-arrow-right')          ->live()
-                            ->afterStateUpdated(function (Set $set, $state) {
-                                $record = \App\Models\Product::where('sku', $state)->first();
-                                if ($record) {
-                                    // dd($record);
-                                    $set('product_id', $record->id);
-                                    $set('quantity', 1);
-                                    $set('quantity_available', $record->stock);
-                                    $set('price', $record->price);
-                                } else {
-                                    Notification::make()
-                                        ->color('warning')
-                                        ->warning()
-                                        ->title('Product error!')
-                                        ->body('The selected product does not exist.')
-                                        ->persistent(false)
-                                        ->duration(10000)
-                                        ->icon('heroicon-o-x-circle')
-                                        ->actions([
-                                            Action::make('View Products')
-                                                ->button()
-                                                ->url(route('filament.doctor.resources.products.index', ['tenant' => Filament::getTenant()->id]), shouldOpenInNewTab: true),
-                                        ])
-                                        ->send();
-                                }
-                            }),
-
-
-                        Select::make('product_id')
-                            ->searchable()
-                            ->preload()
-                            ->native(false)
-                            ->relationship('product', 'name')
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(function (Set $set, $state) {
-                                $record = \App\Models\Product::where('id', $state)->first();
-                                if ($record) {
-                                    $set('quantity_available', $record->stock);
-                                    $set('sku', $record->sku);
-                                    $set('price', $record->price);
-                                }
-                            }),
-
-                        TextInput::make('quantity_available')
-                            ->label('Cantidad Disponible')
-                            ->numeric()
-                            ->live()
-                            ->disabled()
-                            ->afterStateHydrated(function (TextInput $component, $state, Set $set, $record) {
-                                // If we have a record with a product, get its stock
-                                if ($record && $record->product) {
-                                    $set('quantity_available', $record->product->stock);
-                                }
-                            }),
-
-                        \Filament\Forms\Components\TextInput::make('quantity')
-                            ->label('Cantidad')
-                            ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 0)
-                            ->required(),
-
-
-                        \Filament\Forms\Components\TextInput::make('price')
-                            ->suffix(config('money.defaults.currency'))
-                            ->label('Precio')
-                            ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
-                            ->required(),
-                    ])->columns(5),
-
-                    RichEditor::make('notes')
-                    ->columnSpanFull()
-                    ->label('Notas')
-                    ->nullable(),
-
-
-            ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('reference')
-                    ->label('Referencia')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('currency')
-                    ->label('Moneda')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
-
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                //Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+public static function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            Tables\Columns\TextColumn::make('reference')
+                ->label(__('Reference'))
+                ->searchable()
+                ->sortable(),
+            Tables\Columns\TextColumn::make('currency')
+                ->label(__('Currency'))
+                ->searchable(),
+            Tables\Columns\TextColumn::make('created_at')
+                ->label(__('Created At'))
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: false),
+        ])
+        ->filters([
+            //
+        ])
+        ->actions([
+            Tables\Actions\DeleteAction::make()
+                ->label(__('Delete'))
                 ->before(function (Order $order) {
-                    //to be deleted
                     $inventoryTransaction = InventoryTransaction::with('products')->where('order_id', $order->id);
-                    //multiple products to be deleted
                     InventoryTransactionProduct::where('inventory_transaction_id', $inventoryTransaction->first()->id)->delete();
-                    // Runs after the form fields are saved to the database.
                     $inventoryTransaction->delete();
                 }),
-                Tables\Actions\ViewAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
+            Tables\Actions\ViewAction::make()
+                ->label(__('View')),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make()
+                    ->label(__('Delete')),
+            ]),
+        ]);
+}
 
     public static function getRelations(): array
     {

@@ -31,7 +31,15 @@ class AppServiceProvider extends ServiceProvider
 
         LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
             $switch
-                ->locales(['es','en']); // also accepts a closure
+            ->displayLocale('es')
+                ->locales([
+                    'es',
+                    'en',
+                ])
+                ->flags([
+                    'es' => asset('images/es.svg'),
+                    'en' => asset('images/us.svg'),
+                ]); // also accepts a closure
         });
 
         InventoryTransaction::observe(InventoryTransactionObserver::class);

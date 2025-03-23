@@ -38,111 +38,109 @@ class AppointmentResource extends Resource
     }
 */
 
-    public static function form(Form $form): Form
-    {
-        $doctorRole = Role::whereName('doctor')->first();
+public static function form(Form $form): Form
+{
+    return $form
+        ->schema([
+            Forms\Components\Select::make('pet_id')
+                ->label(__('Pet'))
+                ->relationship(name: 'pet', titleAttribute: 'name')
+                ->allowHtml()
+                ->searchable()
+                ->preload()
+                ->required()
+                ->columnSpanFull(),
+            Forms\Components\DatePicker::make('date')
+                ->label(__('Date'))
+                ->native(false)
+                ->displayFormat('M d, Y')
+                ->closeOnDateSelection()
+                ->required()
+                ->live()
+                ->afterStateUpdated(fn (Set $set) => $set('slot_id', null)),
+            TimePickerField::make('start_time')
+                ->label(__('Start Time'))
+                ->okLabel(__("Confirm"))
+                ->cancelLabel(__("Cancel")),
+            TimePickerField::make('end_time')
+                ->label(__('End Time'))
+                ->okLabel(__("Confirm"))
+                ->cancelLabel(__("Cancel")),
+            Forms\Components\TextInput::make('description')
+                ->label(__('Description'))
+                ->required(),
+            Forms\Components\Select::make('status')
+                ->label(__('Status'))
+                ->native(false)
+                ->options(AppointmentStatus::class)
+                ->visibleOn(Pages\EditAppointment::class)
+        ]);
+}
 
-        return $form
-            ->schema([
-                Forms\Components\Select::make('pet_id')
-                    ->label('Pet')
-                    ->relationship(name: 'pet', titleAttribute: 'name')
-                    ->allowHtml()
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->columnSpanFull(),
-                    /*->getSearchResultsUsing(function (string $search) {
-                        $pets = Pet::where('name', 'like', "%{$search}%")->limit(50)->get();
-
-                        return $pets->mapWithKeys(function ($pet) {
-                                return [$pet->getKey() => AvatarOptions::getOptionString($pet)];
-                        })->toArray();
-                    })
-                    ->options(function (): array {
-                        $pets = Pet::all();
-
-                        return $pets->mapWithKeys(function ($pet) {
-                            return [$pet->getKey() => AvatarOptions::getOptionString($pet)];
-                        })->toArray();
-                    }),*/
-                Forms\Components\DatePicker::make('date')
-                    ->native(false)
-                    ->displayFormat('M d, Y')
-                    ->closeOnDateSelection()
-                    ->required()
-                    ->live()
-                    ->afterStateUpdated(fn (Set $set) => $set('slot_id', null)),
-
-
-                    TimePickerField::make('start_time')->label('Start Time')->okLabel("Confirm")->cancelLabel("Cancel"),
-                    TimePickerField::make('end_time')->label('End Time')->okLabel("Confirm")->cancelLabel("Cancel"),
-
-                Forms\Components\TextInput::make('description')
-                    ->required(),
-                Forms\Components\Select::make('status')
-                    ->native(false)
-                    ->options(AppointmentStatus::class)
-                    ->visibleOn(Pages\EditAppointment::class)
-            ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\ImageColumn::make('pet.avatar')
-                    ->label('Image')
-                    ->circular(),
-                Tables\Columns\TextColumn::make('pet.name')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date')
-                    ->date('M d, Y')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('slot.formatted_time')
-                    ->label('Time')
-                    ->badge()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->sortable()
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\Action::make('Atendida')
-                    ->action(function (Appointment $record) {
-                        $record->status = AppointmentStatus::Attended;
-                        $record->save();
-                    })
-                    ->visible(fn (Appointment $record) => $record->status == AppointmentStatus::Created)
-                    ->color('success')
-                    ->icon('heroicon-o-check'),
-                Tables\Actions\Action::make('Cancel')
-                    ->action(function (Appointment $record) {
-                        $record->status = AppointmentStatus::Canceled;
-                        $record->save();
-                    })
-                    ->visible(fn (Appointment $record) => $record->status != AppointmentStatus::Canceled)
-                    ->color('danger')
-                    ->icon('heroicon-o-x-mark'),
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ])
-            ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
-            ]);
-    }
-
+public static function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            Tables\Columns\ImageColumn::make('pet.avatar')
+                ->label(__('Image'))
+                ->circular(),
+            Tables\Columns\TextColumn::make('pet.name')
+                ->label(__('Pet Name'))
+                ->searchable()
+                ->sortable(),
+            Tables\Columns\TextColumn::make('description')
+                ->label(__('Description'))
+                ->searchable()
+                ->sortable(),
+            Tables\Columns\TextColumn::make('date')
+                ->label(__('Date'))
+                ->date('M d, Y')
+                ->sortable(),
+            Tables\Columns\TextColumn::make('slot.formatted_time')
+                ->label(__('Time'))
+                ->badge()
+                ->sortable(),
+            Tables\Columns\TextColumn::make('status')
+                ->label(__('Status'))
+                ->badge()
+                ->sortable()
+        ])
+        ->filters([
+            //
+        ])
+        ->actions([
+            Tables\Actions\Action::make('Atendida')
+                ->label(__('Attended'))
+                ->action(function (Appointment $record) {
+                    $record->status = AppointmentStatus::Attended;
+                    $record->save();
+                })
+                ->visible(fn (Appointment $record) => $record->status == AppointmentStatus::Created)
+                ->color('success')
+                ->icon('heroicon-o-check'),
+            Tables\Actions\Action::make('Cancel')
+                ->label(__('Cancel'))
+                ->action(function (Appointment $record) {
+                    $record->status = AppointmentStatus::Canceled;
+                    $record->save();
+                })
+                ->visible(fn (Appointment $record) => $record->status != AppointmentStatus::Canceled)
+                ->color('danger')
+                ->icon('heroicon-o-x-mark'),
+            Tables\Actions\EditAction::make()
+                ->label(__('Edit')),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make()
+                    ->label(__('Delete')),
+            ]),
+        ])
+        ->emptyStateActions([
+            Tables\Actions\CreateAction::make()
+                ->label(__('Create')),
+        ]);
+}
     public static function getRelations(): array
     {
         return [
