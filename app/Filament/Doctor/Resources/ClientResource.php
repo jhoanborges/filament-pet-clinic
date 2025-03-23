@@ -35,42 +35,50 @@ class ClientResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('lastname')
+                    ->label(__('Lastname'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('ocupacion')
-                    ->label('Occupation')
+                    ->label(__('Occupation'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
+                    ->label(__('Email'))
                     ->email()
                     ->required()
                     ->unique(Client::class, 'email', ignoreRecord: true)
                     ->maxLength(255),
-                PhoneInput::make('phone'),
+                PhoneInput::make('phone')
+                    ->label(__('Phone')),
                 Forms\Components\Select::make('gender')
+                    ->label(__('Gender'))
                     ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
-                        'other' => 'Other',
+                        'male' => __('Male'),
+                        'female' => __('Female'),
+                        'other' => __('Other'),
                     ])
                     ->required(),
                 Forms\Components\DatePicker::make('birthday')
-                    ->label('Birthday'),
+                    ->label(__('Birthday')),
                 Forms\Components\TextInput::make('street_address')
+                    ->label(__('Street Address'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('colony')
-                    ->label('Colony/Neighborhood')
+                    ->label(__('Colony/Neighborhood'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('city')
+                    ->label(__('City'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('municipality')
+                    ->label(__('Municipality'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('postal_code')
-                    ->label('Postal Code')
+                    ->label(__('Postal Code'))
                     ->maxLength(255),
                 Forms\Components\Toggle::make('allow_email_notification')
-                    ->label('Allow Email Notifications')
+                    ->label(__('Allow Email Notifications'))
                     ->default(false),
             ]);
     }

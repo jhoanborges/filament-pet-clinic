@@ -23,6 +23,11 @@ class InventoryLogResource extends Resource
     protected static ?string $navigationGroup = 'Inventory';
     protected static ?string $tenantOwnershipRelationshipName = 'clinics';
     protected static ?int $navigationSort = 5;
+
+    // Traducciones para el nombre del recurso
+    protected static ?string $label = 'Inventory Log';
+    protected static ?string $pluralLabel = 'Inventory Logs';
+
 /*
     public static function getNavigationBadge(): ?string
     {
@@ -42,20 +47,32 @@ class InventoryLogResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('action')->label('Action')->sortable(),
-                TextColumn::make('product.name')->label('Product')->sortable()->searchable(),
-                TextColumn::make('quantity')->sortable(),
-                TextColumn::make('created_at')->dateTime()->sortable(),
+                TextColumn::make('action')
+                    ->label(__('Action'))
+                    ->sortable(),
+                TextColumn::make('product.name')
+                    ->label(__('Product'))
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('quantity')
+                    ->label(__('Quantity'))
+                    ->sortable(),
+                TextColumn::make('created_at')
+                    ->label(__('Created At'))
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label(__('Edit')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('Delete')),
                 ]),
             ]);
     }

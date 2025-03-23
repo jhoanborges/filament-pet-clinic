@@ -44,56 +44,48 @@ class ProductResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Tabs::make('Tabs')
+            Tabs::make(__('Tabs'))
                 ->columnSpanFull()
                 ->tabs([
-                    Tabs\Tab::make('Product Information')
+                    Tabs\Tab::make(__('Product Information'))
                         ->icon('phosphor-shopping-cart-light')
                         ->schema([
-
                             Forms\Components\FileUpload::make('image')
+                                ->label(__('Image'))
                                 ->columnSpanFull()
-                                //->disk('products')
-                                //->directory('products')
                                 ->openable()
                                 ->downloadable()
-                               ->avatar()
+                                ->avatar()
                                 ->image()
                                 ->imageEditor(),
-
                             TextInput::make('name')
+                                ->label(__('Name'))
                                 ->required()
                                 ->maxLength(255),
-
-                                Select::make('category_id')
-                                ->label('Category')
+                            Select::make('category_id')
+                                ->label(__('Category'))
                                 ->preload()
                                 ->options(ProductCategory::all()->pluck('name', 'id'))
                                 ->searchable(),
-                                //->required(),
-
-
                             \Filament\Forms\Components\TextInput::make('price')
+                                ->label(__('Price'))
                                 ->suffix(config('money.defaults.currency'))
                                 ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2),
-
-
                             TextInput::make('sku')
+                                ->label(__('SKU'))
                                 ->unique(ignoreRecord: true)
                                 ->nullable()
                                 ->maxLength(255),
-
                             RichEditor::make('description')
+                                ->label(__('Description'))
                                 ->columnSpanFull()
                                 ->nullable(),
-
                         ])->columns(2),
-                    Tabs\Tab::make('Images')
+                    Tabs\Tab::make(__('Images'))
                         ->icon('phosphor-images')
-
                         ->schema([
-
                             SpatieMediaLibraryFileUpload::make('media')
+                                ->label(__('Media'))
                                 ->image()
                                 ->openable()
                                 ->panelLayout('grid')
@@ -104,10 +96,7 @@ class ProductResource extends Resource
                                 ->disk('r2')
                                 ->directory('products')
                                 ->maxFiles(100)
-
                         ]),
-
-
                 ])
                 ->persistTab()
                 ->id('products-tabs')
@@ -119,36 +108,38 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-
-
                 ImageColumn::make('image')
+                    ->label(__('Image'))
                     ->circular(),
-
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('Name'))
                     ->sortable()
                     ->searchable(),
-
                 Tables\Columns\TextColumn::make('sku')
+                    ->label(__('SKU'))
                     ->sortable()
                     ->searchable(),
-                    TextColumn::make('stock')
-                    ->label('Stock')
+                TextColumn::make('stock')
+                    ->label(__('Stock'))
                     ->sortable()
                     ->formatStateUsing(fn ($state) => $state),
-
                 Tables\Columns\TextColumn::make('category.name')
+                    ->label(__('Category'))
                     ->limit(50)
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label(__('Edit')),
+                Tables\Actions\DeleteAction::make()
+                    ->label(__('Delete')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('Delete')),
                 ]),
             ]);
     }

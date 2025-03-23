@@ -11,6 +11,7 @@ use Laravel\Cashier\SubscriptionItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\InventoryTransactionObserver;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+            ->displayLocale('es')
+                ->locales([
+                    'es',
+                    'en',
+                ])
+                ->flags([
+                    'es' => asset('images/es.svg'),
+                    'en' => asset('images/us.svg'),
+                ]); // also accepts a closure
+        });
+
         InventoryTransaction::observe(InventoryTransactionObserver::class);
         Model::unguard(true);
 

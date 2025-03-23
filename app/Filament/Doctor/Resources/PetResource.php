@@ -37,32 +37,33 @@ class PetResource extends Resource
     {
         return ['name'];
     }
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
-                Tabs::make('Tabs')
+                Tabs::make(__('Pet Details'))
                     ->columnSpanFull()
                     ->tabs([
-                        Tabs\Tab::make('Pet information')
+                        Tabs\Tab::make(__('Information'))
                             ->schema([
-
                                 Forms\Components\FileUpload::make('avatar')
-                                ->avatar()
+                                    ->avatar()
                                     ->image()
-                                    ->imageEditor(),
+                                    ->imageEditor()
+                                    ->label(__('Avatar')),
                                 Forms\Components\TextInput::make('name')
-                                    ->required(),
+                                    ->required()
+                                    ->label(__('Name')),
                                 Forms\Components\DatePicker::make('date_of_birth')
                                     ->native(false)
                                     ->required()
                                     ->closeOnDateSelection()
-                                    ->displayFormat('M d Y'),
+                                    ->displayFormat('M d Y')
+                                    ->label(__('Date of Birth')),
                                 Forms\Components\Select::make('type')
                                     ->native(false)
-                                    ->options(PetType::class),
+                                    ->options(PetType::class)
+                                    ->label(__('Type')),
                                 Forms\Components\Select::make('client_id')
                                     ->relationship('client', 'name')
                                     ->native(false)
@@ -70,47 +71,57 @@ class PetResource extends Resource
                                     ->preload()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('name')
-                                        ->required()
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('lastname')
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('ocupacion')
-                                        ->label('Occupation')
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('email')
-                                        ->email()
-                                        ->required()
-                                        ->unique(Client::class, 'email', ignoreRecord: true)
-                                        ->maxLength(255),
-                                    PhoneInput::make('phone'),
-                                    Forms\Components\Select::make('gender')
-                                        ->options([
-                                            'male' => 'Male',
-                                            'female' => 'Female',
-                                            'other' => 'Other',
-                                        ])
-                                        ->required(),
-                                    Forms\Components\DatePicker::make('birthday')
-                                        ->label('Birthday'),
-                                    Forms\Components\TextInput::make('street_address')
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('colony')
-                                        ->label('Colony/Neighborhood')
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('city')
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('municipality')
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('postal_code')
-                                        ->label('Postal Code')
-                                        ->maxLength(255),
-                                    Forms\Components\Toggle::make('allow_email_notification')
-                                        ->label('Allow Email Notifications')
-                                        ->default(false),
+                                            ->label(__('Name'))
+                                            ->required()
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('lastname')
+                                            ->label(__('Lastname'))
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('ocupacion')
+                                            ->label(__('Occupation'))
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('email')
+                                            ->label(__('Email'))
+                                            ->email()
+                                            ->required()
+                                            ->unique(Client::class, 'email', ignoreRecord: true)
+                                            ->maxLength(255),
+                                        PhoneInput::make('phone')
+                                            ->label(__('Phone')),
+                                        Forms\Components\Select::make('gender')
+                                            ->label(__('Gender'))
+                                            ->options([
+                                                'male' => __('Male'),
+                                                'female' => __('Female'),
+                                                'other' => __('Other'),
+                                            ])
+                                            ->required(),
+                                        Forms\Components\DatePicker::make('birthday')
+                                            ->label(__('Birthday'))
+                                            ->native(false)
+                                            ->closeOnDateSelection()
+                                            ->displayFormat('M d Y'),
+                                        Forms\Components\TextInput::make('street_address')
+                                            ->label(__('Street Address'))
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('colony')
+                                            ->label(__('Colony/Neighborhood'))
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('city')
+                                            ->label(__('City'))
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('municipality')
+                                            ->label(__('Municipality'))
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('postal_code')
+                                            ->label(__('Postal Code'))
+                                            ->maxLength(255),
+                                        Forms\Components\Toggle::make('allow_email_notification')
+                                            ->label(__('Allow Email Notifications'))
+                                            ->default(false),
                                     ]),
-
                             ]),
-                        Tabs\Tab::make('Files')
+                        Tabs\Tab::make(__('Files'))
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('media')
                                     ->openable()
@@ -121,16 +132,9 @@ class PetResource extends Resource
                                     ->reorderable()
                                     ->disk('r2')
                                     ->collection('pets')
-                                    ->maxFiles(100)
+                                    ->maxFiles(100),
                             ]),
-                        /*Tabs\Tab::make('Tab 3')
-        ->schema([
-            // ...
-        ]),
-        */
                     ]),
-
-
             ]);
     }
 
