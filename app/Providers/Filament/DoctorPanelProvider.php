@@ -115,7 +115,7 @@ class DoctorPanelProvider extends PanelProvider
                     Subscribed::class
             ])
             ->databaseTransactions()
-            ->unsavedChangesAlerts()
+            //->unsavedChangesAlerts()
             //->tenantBillingProvider(new BillingProvider('default'))
             //->requiresTenantSubscription()
             ->theme(asset('css/filament/admin/theme.css'))

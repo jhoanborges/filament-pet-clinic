@@ -6,14 +6,16 @@ use App\Models\Pet;
 use Filament\Forms;
 use Filament\Tables;
 use App\Enums\PetType;
+use App\Models\Client;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Tabs;
 use Illuminate\Support\Facades\Storage;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use App\Filament\Doctor\Resources\PetResource\Pages;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Tabs;
 
 class PetResource extends Resource
 {
@@ -65,7 +67,48 @@ class PetResource extends Resource
                                     ->relationship('client', 'name')
                                     ->native(false)
                                     ->searchable()
-                                    ->preload(),
+                                    ->preload()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('lastname')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('ocupacion')
+                                        ->label('Occupation')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('email')
+                                        ->email()
+                                        ->required()
+                                        ->unique(Client::class, 'email', ignoreRecord: true)
+                                        ->maxLength(255),
+                                    PhoneInput::make('phone'),
+                                    Forms\Components\Select::make('gender')
+                                        ->options([
+                                            'male' => 'Male',
+                                            'female' => 'Female',
+                                            'other' => 'Other',
+                                        ])
+                                        ->required(),
+                                    Forms\Components\DatePicker::make('birthday')
+                                        ->label('Birthday'),
+                                    Forms\Components\TextInput::make('street_address')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('colony')
+                                        ->label('Colony/Neighborhood')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('city')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('municipality')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('postal_code')
+                                        ->label('Postal Code')
+                                        ->maxLength(255),
+                                    Forms\Components\Toggle::make('allow_email_notification')
+                                        ->label('Allow Email Notifications')
+                                        ->default(false),
+                                    ]),
+
                             ]),
                         Tabs\Tab::make('Files')
                             ->schema([
