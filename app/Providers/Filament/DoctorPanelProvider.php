@@ -103,8 +103,7 @@ class DoctorPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
                 ])
                 ->authMiddleware([
-                    Auhenticate::class
-                    //Subscribed::class
+                    Authenticate::class
             ])
             ->databaseTransactions()
             //->unsavedChangesAlerts()
