@@ -21,6 +21,7 @@ use Filament\Notifications\Actions\Action;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Doctor\Resources\InventoryTransactionResource\Pages;
 use App\Filament\Doctor\Resources\InventoryTransactionResource\RelationManagers;
+use App\Models\Inventory;
 
 class InventoryTransactionResource extends Resource
 {
@@ -43,6 +44,14 @@ class InventoryTransactionResource extends Resource
                 TextInput::make('reference')
                     ->label(__('Reference'))
                     ->unique()
+                    ->default(function () {
+                        $lastOrder = InventoryTransaction::orderBy('id', 'desc')->first();
+                        if ($lastOrder) {
+                            return 'INVTR-'.$lastOrder->id + 1;
+                        } else {
+                            return 'INVTR-1';
+                        }
+                    })
                     ->required(),
                 Select::make('type')
                     ->label(__('Type'))
