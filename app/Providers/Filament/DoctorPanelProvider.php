@@ -35,6 +35,7 @@ use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Filament\Enums\ThemeMode;
 use App\Filament\Admin\Themes\PetClinic;
+use App\Filament\Doctor\Pages\Pos;
 
 class DoctorPanelProvider extends PanelProvider
 {
@@ -80,6 +81,7 @@ class DoctorPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\\Filament\\Doctor\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                Pos::class,
             ])
             //->discoverWidgets(in: app_path('Filament/Doctor/Widgets'), for: 'App\\Filament\\Doctor\\Widgets')
             ->widgets([

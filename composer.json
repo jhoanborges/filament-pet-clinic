@@ -19,6 +19,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "hasnayeen/themes": "^3.0",
         "husam-tariq/filament-timepicker": "^3.0",
+        "ijpatricio/mingle": "^0.0.21",
         "laravel/cashier": "^15.6",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
