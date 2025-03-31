@@ -42,6 +42,7 @@ class DoctorPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+        ->sidebarCollapsibleOnDesktop()
         ->brandLogo(asset('images/logo.svg'))
         ->darkModeBrandLogo(asset('images/logo-white.svg'))
         ->brandLogoHeight('2rem')
