@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Filament\Pages\Dashboard;
 use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider;
+use App\Http\Controllers\WebhookController;
 use App\Filament\Doctor\Resources\PetResource;
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,7 @@ Route::get('/subscription-checkout', function (Request $request) {
             'cancel_url' => route('home'),
         ]);
 })->name('subscription-checkout');
+
+Route::post('/webhooks/mercadopago', [WebhookController::class, 'handleWebhook'])
+    ->name('webhooks.mercadopago')
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

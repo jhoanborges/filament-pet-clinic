@@ -9,13 +9,25 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $appends = ['stock'];
+    protected $appends = ['stock', 'image_url'];
+    
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'image',
+        'category_id',
+        'clinic_id',
+        'sku'
+    ];
     
     public function inventory()
     {
@@ -58,6 +70,45 @@ class Product extends Model implements HasMedia
         return $this->inventoryTransactionProducts->sum(function ($item) {
             $type = $item->inventoryTransaction->type;
             return $type === 'entry' ? $item->quantity : -$item->quantity;
+        });
+    }
+    
+    /**
+     * Get the full URL for the product image.
+     *
+     * @return string|null
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image)) {
+            return null;
+        }
+        
+        // If the image is already a full URL, ensure it uses the correct domain
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            // If the URL is already using the correct domain, return as is
+            if (str_contains($this->image, 'pet-clinic.hexagun.mx')) {
+                return $this->image;
+            }
+            
+            // Otherwise, convert any incorrect URLs to use the correct domain
+            $path = parse_url($this->image, PHP_URL_PATH);
+            return 'https://pet-clinic.hexagun.mx' . $path;
+        }
+        
+        // If it's a relative path, construct the full URL
+        return 'https://pet-clinic.hexagun.mx/' . ltrim($this->image, '/');
+    }
+    
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('order_by_created_at', function (Builder $builder) {
+            $builder->orderBy('created_at', 'desc');
         });
     }
     
