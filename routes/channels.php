@@ -12,7 +12,5 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
-
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
+Broadcast::channel('notification.{id}', fn ($user, $id) => (int) $user->id === (int) $id);
+Broadcast::channel('transaction.{id}', fn ($user, $id) => (int) $user->id === (int) $id);

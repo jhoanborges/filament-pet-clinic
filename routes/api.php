@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\MercadoPagoController;
+use App\Http\Controllers\MessagesNotificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,11 +36,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [AuthController::class, 'profile']);
-});
+    Route::post('/get-unread-messages', [MessagesNotificationsController::class, 'getUnreadMessages']);
 
 
-// MercadoPago Routes
-Route::prefix('mercadopago')->group(function () {
-    Route::post('/orders', [MercadoPagoController::class, 'createOrder']);
-    Route::get('/orders/{orderId}', [MercadoPagoController::class, 'getOrderStatus']);
+    // MercadoPago Routes
+    Route::prefix('mercadopago')->group(function () {
+        Route::post('/orders', [MercadoPagoController::class, 'createOrder']);
+        Route::get('/orders/{orderId}', [MercadoPagoController::class, 'getOrderStatus']);
+    });
 });
+
+Route::post('/test/send-message', [MessagesNotificationsController::class, 'sendTestMessage']);

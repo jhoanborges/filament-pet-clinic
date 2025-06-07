@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Models\User;
 use App\Facades\MercadoPago;
-use App\Models\MercadoPagoNotification;
+use Illuminate\Http\Request;
+use App\Events\TransactionEvent;
+use Illuminate\Support\Facades\Log;
 use App\Models\MercadoPagoTransaction;
+use App\Models\MercadoPagoNotification;
 
 class WebhookController extends Controller
 {
@@ -90,6 +92,11 @@ class WebhookController extends Controller
             // For test transactions, return a success response
             if ($paymentId === '123456') {
                 Log::info('Test payment received', ['payment_id' => $paymentId]);
+
+                $transactionForTest = MercadoPagoTransaction::latest()->first();
+                $user = User::find($transactionForTest->user_id);
+                
+                broadcast(new TransactionEvent($user, $user, 'Pago realizado', $transactionForTest));
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Test payment processed successfully'
@@ -238,6 +245,7 @@ class WebhookController extends Controller
     {
         Log::info("Payment created", ['payment_id' => $transaction->payment_id]);
         // Add any specific logic for created status
+        broadcast(new TransactionEvent($transaction->user, $transaction->user, 'Pago creado', $transaction));
     }
     
     protected function handleAtTerminalStatus($transaction, $paymentData)
@@ -251,6 +259,7 @@ class WebhookController extends Controller
         Log::info("Payment processed successfully", ['payment_id' => $transaction->payment_id]);
         // Add any specific logic for processed status
         // Example: Send confirmation email, update order status, etc.
+        broadcast(new TransactionEvent($transaction->user, $transaction->user, 'Pago procesado', $transaction));
     }
     
     protected function handleCanceledStatus($transaction, $paymentData)
@@ -261,6 +270,7 @@ class WebhookController extends Controller
             'reason' => $reason
         ]);
         // Add any specific logic for canceled status
+        broadcast(new TransactionEvent($transaction->user, $transaction->user, 'Pago cancelado', $transaction));
     }
     
     protected function handleFailedStatus($transaction, $paymentData, $statusDetail)
@@ -282,6 +292,7 @@ class WebhookController extends Controller
             'amount' => $refundAmount
         ]);
         // Add any specific logic for refunded status
+        broadcast(new TransactionEvent($transaction->user, $transaction->user, 'Pago reembolsado', $transaction));
     }
     
     protected function handleActionRequiredStatus($transaction, $paymentData)
@@ -289,5 +300,6 @@ class WebhookController extends Controller
         Log::info("Action required for payment", ['payment_id' => $transaction->payment_id]);
         // Add any specific logic for action_required status
         // Example: Notify admin to check the terminal
+        broadcast(new TransactionEvent($transaction->user, $transaction->user, 'Pago requiere acción', $transaction));
     }
 }

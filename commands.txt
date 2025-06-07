@@ -54,3 +54,15 @@ curl -X POST \
     "integrator_id": "dev_24c65fb163bf11ea96500242ac130004"
   }
 }'
+
+
+
+test notification
+curl -X POST http://localhost/api/test/send-message \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "user_id": 2,
+    "from": 1,
+    "message": "This is a test message"
+  }'

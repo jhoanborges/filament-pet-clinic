@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Product;
-use App\Models\MercadoPagoTransaction;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Events\TransactionEvent;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
+use App\Models\MercadoPagoTransaction;
 
 class MercadoPagoController extends Controller
 {
@@ -38,6 +40,17 @@ class MercadoPagoController extends Controller
         ]);
         
         try {
+
+            $user = auth('sanctum')->user();
+            // Check if user is authenticated
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not authenticated'
+                ], 401);
+            }
+        
+            
             // Calculate total amount
             $totalAmount = 0;
             $items = [];
@@ -46,6 +59,7 @@ class MercadoPagoController extends Controller
                 $product = Product::findOrFail($item['product_id']);
                 $subtotal = $product->price * $item['quantity'];
                 $totalAmount += $subtotal;
+                
                 
                 $items[] = [
                     'title' => $product->name,
@@ -57,11 +71,15 @@ class MercadoPagoController extends Controller
             
             $externalReference = Str::uuid().'-' . Str::random(8);
             
+            if( env('APP_ENV') == 'local' ) {
+                $totalAmount = 5;
+            }
+            
             $payload = [
-                'type' => 'point',
-                'external_reference' => $externalReference,
-                'transactions' => [
-                    'payments' => [
+                    'type' => 'point',
+                    'external_reference' => $externalReference,
+                    'transactions' => [
+                        'payments' => [
                         [
                             'amount' => number_format($totalAmount, 2, '.', '')
                         ]
@@ -90,7 +108,7 @@ class MercadoPagoController extends Controller
                 $transaction = MercadoPagoTransaction::create([
                     'order_id' => $data['id'] ?? null,
                     'type' => $data['type'] ?? null,
-                    'user_id' => $data['user_id'] ?? null,
+                    'user_id' => $user->id,
                     'external_reference' => $externalReference,
                     'description' => $data['description'] ?? null,
                     'processing_mode' => $data['processing_mode'] ?? null,
@@ -105,6 +123,8 @@ class MercadoPagoController extends Controller
                     'payment_id' => $data['transactions']['payments'][0]['id'] ?? null,
                     'payment_status' => $data['transactions']['payments'][0]['status'] ?? null,
                 ]);
+                
+                //broadcast(new TransactionEvent($user, $user, 'Pago realizado', $transaction));
                 
                 return response()->json([
                     'success' => true,
