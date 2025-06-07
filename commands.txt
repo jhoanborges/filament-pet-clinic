@@ -3,3 +3,54 @@ php artisan cashier:webhook --url "https://thankfully-cute-skunk.ngrok-free.app/
 ngrok http --url=thankfully-cute-skunk.ngrok-free.app 80
 
 sail php artisan make:filament-apex-charts OrderMoneyChart
+
+ngrok http --url=thankfully-cute-skunk.ngrok-free.app 80
+
+curl -X GET \
+    'https://api.mercadopago.com/terminals/v1/list?limit=50&offset=0'\
+    -H 'Content-Type: application/json' \
+       -H 'Authorization: Bearer APP_USR-1993058927014393-032221-aaea640ec7cf8ba90cbeca80cc6ee00e-402091782' \
+    
+NEWLAND_N950__N950NCB701012693
+
+
+curl -X PATCH \
+    'https://api.mercadopago.com/terminals/v1/setup'\
+    -H 'Content-Type: application/json' \
+       -H 'Authorization: Bearer APP_USR-1993058927014393-032221-aaea640ec7cf8ba90cbeca80cc6ee00e-402091782' \
+    -d '{
+  "terminals": [
+    {
+      "id": "NEWLAND_N950__N950NCB701012693",
+      "operating_mode": "PDV"
+    }
+  ]
+}'
+
+curl -X POST \
+    'https://api.mercadopago.com/v1/orders'\
+    -H 'Content-Type: application/json' \
+    -H 'X-Idempotency-Key: 1af6-469c-ae06-c3bec19954bb' \
+    -H 'Authorization: Bearer APP_USR-1993058927014393-032221-aaea640ec7cf8ba90cbeca80cc6ee00e-402091782' \
+    -d '{
+  "type": "point",
+  "external_reference": "ext_ref_1234",
+  "transactions": {
+    "payments": [
+      {
+        "amount": "5.00"
+      }
+    ]
+  },
+  "config": {
+    "point": {
+      "terminal_id": "NEWLAND_N950__N950NCB701012693",
+      "print_on_terminal": "no_ticket"
+    }
+  },
+  "description": "Point Mini",
+  "integration_data": {
+    "platform_id": "1234567890",
+    "integrator_id": "dev_24c65fb163bf11ea96500242ac130004"
+  }
+}'

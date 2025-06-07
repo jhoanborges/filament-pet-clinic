@@ -29,6 +29,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "leandrocfe/filament-apex-charts": "^3.1",
         "maartenpaauw/filament-cashier-billing-provider": "^2.2",
+        "mercadopago/dx-php": "3.5.0",
         "mokhosh/filament-kanban": "^2.9",
         "saade/filament-fullcalendar": "^3.0",
         "smknstd/fakerphp-picsum-images": "^1.0",

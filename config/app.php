@@ -174,6 +174,7 @@ return [
         //App\Providers\Filament\OwnerPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
+        App\Providers\MercadoPagoServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -188,6 +189,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'MercadoPago' => App\Facades\MercadoPago::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

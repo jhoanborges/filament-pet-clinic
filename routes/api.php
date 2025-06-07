@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\MercadoPagoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [AuthController::class, 'profile']);
+});
+
+
+// MercadoPago Routes
+Route::prefix('mercadopago')->group(function () {
+    Route::post('/orders', [MercadoPagoController::class, 'createOrder']);
+    Route::get('/orders/{orderId}', [MercadoPagoController::class, 'getOrderStatus']);
 });
