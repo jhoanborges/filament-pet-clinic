@@ -22,6 +22,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 // Product Routes
 Route::get('products', [ProductController::class, 'index']);
+Route::get('products/infinite', [ProductController::class, 'infiniteScroll']);
 Route::get('products/category/{categoryId}', [ProductController::class, 'getByCategory']);
 Route::get('products/clinic/{clinicId}', [ProductController::class, 'getByClinic']);
 Route::get('products/{id}', [ProductController::class, 'show']);

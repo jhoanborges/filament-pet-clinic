@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model implements HasMedia
 {
@@ -97,6 +98,18 @@ class Product extends Model implements HasMedia
         
         // If it's a relative path, construct the full URL
         return 'https://pet-clinic.hexagun.mx/' . ltrim($this->image, '/');
+    }
+    
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('order_by_created_at', function (Builder $builder) {
+            $builder->orderBy('created_at', 'desc');
+        });
     }
     
     

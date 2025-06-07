@@ -13,11 +13,15 @@ class ProductController extends Controller
     use ApiResponse;
 
     /**
-     * Get all products
+     * Get paginated products
      * 
+     * @param Request $request
      * @return JsonResponse
      * 
      * @group Products
+     * @queryParam per_page int Items per page. Default: 16
+     * @queryParam page int Page number. Default: 1
+     * 
      * @response 200 {
      *   "success": true,
      *   "message": "Products retrieved successfully",
@@ -27,17 +31,94 @@ class ProductController extends Controller
      *       "name": "Product Name",
      *       "description": "Product Description",
      *       "price": 19.99,
+     *       "image_url": "https://pet-clinic.hexagun.mx/products_demo_images/cats/1.jpg",
      *       "stock": 100,
      *       "created_at": "2023-01-01T00:00:00.000000Z",
      *       "updated_at": "2023-01-01T00:00:00.000000Z"
      *     }
-     *   ]
+     *   ],
+     *   "meta": {
+     *     "current_page": 1,
+     *     "from": 1,
+     *     "last_page": 5,
+     *     "per_page": 16,
+     *     "to": 16,
+     *     "total": 80
+     *   }
      * }
      */
     public function index(): JsonResponse
     {
-        $products = Product::with(['category', 'clinic'])->get();
-        return $this->responseSuccess('Products retrieved successfully', $products);
+        $products = Product::with(['category', 'clinic'])
+            ->orderBy('id', 'desc')
+            ->get();
+            
+        return $this->responseSuccess(
+            'Products retrieved successfully',
+            $products,
+        );
+    }
+    
+    /**
+     * Get infinite scroll products with search functionality
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     * 
+     * @group Products
+     * @queryParam per_page int Items per page. Default: 10
+     * @queryParam page int Page number. Default: 1
+     * @queryParam search string Search term to filter products by name or description
+     * 
+     * @response 200 {
+     *   "data": [
+     *     {
+     *       "id": 1,
+     *       "name": "Blue Buffalo Digestive Care Cat Food",
+     *       "description": "Premium cat food for digestive health",
+     *       "price": 19.99,
+     *       "image_url": "https://pet-clinic.hexagun.mx/products_demo_images/cats/1.jpg",
+     *       "stock": 100,
+     *       "created_at": "2023-01-01T00:00:00.000000Z",
+     *       "updated_at": "2023-01-01T00:00:00.000000Z"
+     *     }
+     *   ],
+     *   "meta": {
+     *     "current_page": 1,
+     *     "last_page": 1,
+     *     "per_page": 10,
+     *     "total": 1,
+     *     "search_term": "blue buffalo"
+     *   }
+     * }
+     */
+    public function infiniteScroll(Request $request): JsonResponse
+    {
+        $perPage = $request->input('per_page', 100);
+        $page = $request->input('page', 1);
+        $searchTerm = $request->input('search');
+        
+        $query = Product::with(['category', 'clinic'])
+            ->when($searchTerm, function($query) use ($searchTerm) {
+                $query->where(function($q) use ($searchTerm) {
+                    $q->where('name', 'like', "%{$searchTerm}%")
+                      ->orWhere('description', 'like', "%{$searchTerm}%");
+                });
+            })
+            ->orderBy('created_at', 'desc');
+            
+        $products = $query->paginate($perPage, ['*'], 'page', $page);
+            
+        return response()->json([
+            'data' => $products->items(),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+                'search_term' => $searchTerm
+            ]
+        ]);
     }
 
     /**

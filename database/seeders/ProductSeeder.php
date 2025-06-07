@@ -14,7 +14,7 @@ class ProductSeeder extends Seeder
     /**
      * Number of products to create per type
      */
-    protected int $productsPerType = 50;
+    protected int $productsPerType = 200;
     
     /**
      * Run the database seeds.
